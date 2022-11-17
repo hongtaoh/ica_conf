@@ -1,0 +1,30 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                   count    min threads    max threads
+------------------  -------  -------------  -------------
+all                       1              1              1
+scrape_2014_onward        1              1              1
+total                     2              1              1
+
+Select jobs to execute...
+
+[Tue Nov  8 10:31:35 2022]
+rule scrape_2014_onward:
+    output: ../data/interim/session_df_2014.csv, ../data/interim/author_df_2014.csv, ../data/interim/paper_df_2014.csv
+    jobid: 1
+    resources: tmpdir=/var/folders/z2/5kr96fyn63z_tj_bwr33t5dw0000gn/T
+
+[Tue Nov  8 10:31:50 2022]
+Error in rule scrape_2014_onward:
+    jobid: 1
+    output: ../data/interim/session_df_2014.csv, ../data/interim/author_df_2014.csv, ../data/interim/paper_df_2014.csv
+    shell:
+        python scripts/scrape_2014_onward.py ../data/interim/session_df_2014.csv ../data/interim/author_df_2014.csv ../data/interim/paper_df_2014.csv
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2022-11-08T103134.610276.snakemake.log

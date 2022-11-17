@@ -1,0 +1,58 @@
+from os.path import join as pjoin
+import sys
+
+DATA_DIR = "../data/"
+RAW_DATA_DIR = pjoin(DATA_DIR, "raw")
+INTERIM_DATA_DIR = pjoin(DATA_DIR, "interim")
+PROCESSED_DATA_DIR = pjoin(DATA_DIR, "processed")
+
+###############################################################################
+# Raw Data
+###############################################################################
+
+
+###############################################################################
+# Interim outputs
+###############################################################################
+
+PAPER_2003_2004 = pjoin(INTERIM_DATA_DIR, "paper_df_2003_2004.csv")
+AUTHOR_2003_2004 = pjoin(INTERIM_DATA_DIR, "author_df_2003_2004.csv")
+PAPER_2005_2013 = pjoin(INTERIM_DATA_DIR, "paper_df_2005_2013.csv")
+AUTHOR_2005_2013 = pjoin(INTERIM_DATA_DIR, "author_df_2005_2013.csv")
+SESSION_2014 = pjoin(INTERIM_DATA_DIR, 'session_df_2014.csv')
+AUTHOR_2014 = pjoin(INTERIM_DATA_DIR, 'author_df_2014.csv')
+PAPER_2014 = pjoin(INTERIM_DATA_DIR, 'paper_df_2014.csv')
+RANDOM_RESULT_2014_2018 = pjoin(INTERIM_DATA_DIR, 'random_result_2014_2018.txt')
+
+
+###############################################################################
+# Workflows
+###############################################################################
+
+rule all:
+    input:
+        # PAPER_2003_2004,
+        # AUTHOR_2003_2004,
+        # PAPER_2005_2013,
+        # AUTHOR_2005_2013,
+        # SESSION_2014,
+        # AUTHOR_2014,
+        # PAPER_2014,
+        RANDOM_RESULT_2014_2018,
+        
+
+rule scrape_03_04:
+    output: 
+        PAPER_2003_2004,
+        AUTHOR_2003_2004,
+    shell: "python scripts/scrape_2003_2004.py {output}"
+
+rule scrape_2005_2013:
+    output: 
+        PAPER_2005_2013,
+        AUTHOR_2005_2013,
+    shell: "python scripts/scrape_2005_2013.py {output}"
+
+rule scrape_2014_onward_paper_session:
+    output: RANDOM_RESULT_2014_2018
+    shell: "python scripts/scrape_2014_onward_paper_session.py {output}"

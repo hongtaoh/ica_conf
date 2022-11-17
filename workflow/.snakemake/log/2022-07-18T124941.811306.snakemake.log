@@ -1,0 +1,3 @@
+NameError in line 30 of /Users/hongtaoh/Desktop/github/ica_conf/workflow/Snakefile:
+name 'PAPER_03_04' is not defined
+  File "/Users/hongtaoh/Desktop/github/ica_conf/workflow/Snakefile", line 30, in <module>
