@@ -1,0 +1,31 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                                 count    min threads    max threads
+--------------------------------  -------  -------------  -------------
+all                                     1              1              1
+scrape_2014_onward_paper_session        1              1              1
+total                                   2              1              1
+
+Select jobs to execute...
+
+[Thu Nov 17 14:02:08 2022]
+rule scrape_2014_onward_paper_session:
+    output: ../data/interim/random_result_2014_2018.txt
+    jobid: 1
+    reason: Missing output files: ../data/interim/random_result_2014_2018.txt
+    resources: tmpdir=/tmp
+
+[Thu Nov 17 14:02:12 2022]
+Error in rule scrape_2014_onward_paper_session:
+    jobid: 1
+    output: ../data/interim/random_result_2014_2018.txt
+    shell:
+        python scripts/scrape_2014_onward_paper_session.py ../data/interim/random_result_2014_2018.txt
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2022-11-17T140208.224574.snakemake.log

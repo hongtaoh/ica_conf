@@ -229,7 +229,7 @@ if __name__ == '__main__':
 	urlBase = 'https://convention2.allacademic.com/one/ica/ica'
 	# scrape 2014-2018
 	# years = range(14,19)
-	years = [14, 16, 17, 18]
+	years = [16, 17, 18]
 	# there are always excepts, for example, 2016 session 262
 	to_scrape_later_tuples = []
 	for year in years:
@@ -271,20 +271,24 @@ if __name__ == '__main__':
 				if papers:
 					print(f'There are {len(papers)} papers.')
 					for p in papers:
-						p_link = p.get_attribute('href')
-						driver.execute_script("window.open('');")
-						driver.switch_to.window(driver.window_handles[2])
-						driver.get(p_link)
-						authors_e, author_num = get_author_num()
-						paper_title = get_paper_info(
-							paper_tuples, 
-							author_num, 
-							session_title, 
-							sub_unit, 
-							year, 
-							paper_id
-						)
-						get_author_info(authors_e, author_num, author_tuples, paper_title, paper_id, year)
+						# 2016, SESSION 85 HAS TROUBLES
+						try:
+							p_link = p.get_attribute('href')
+							driver.execute_script("window.open('');")
+							driver.switch_to.window(driver.window_handles[2])
+							driver.get(p_link)
+							authors_e, author_num = get_author_num()
+							paper_title = get_paper_info(
+								paper_tuples, 
+								author_num, 
+								session_title, 
+								sub_unit, 
+								year, 
+								paper_id
+							)
+							get_author_info(authors_e, author_num, author_tuples, paper_title, paper_id, year)
+						except:
+							print('This paper is unavailable.')
 						paper_id += 1
 
 						print(f'Paper {papers.index(p) + 1} is done.')
