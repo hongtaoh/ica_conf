@@ -23,6 +23,8 @@ SESSION_2014 = pjoin(INTERIM_DATA_DIR, 'session_df_2014.csv')
 AUTHOR_2014 = pjoin(INTERIM_DATA_DIR, 'author_df_2014.csv')
 PAPER_2014 = pjoin(INTERIM_DATA_DIR, 'paper_df_2014.csv')
 RANDOM_RESULT_2014_2018 = pjoin(INTERIM_DATA_DIR, 'random_result_2014_2018.txt')
+RANDOM_RESULT_2014_2018_INTERACTIVE = pjoin(
+    INTERIM_DATA_DIR, 'random_result_2014_2018_interactive.txt')
 
 
 ###############################################################################
@@ -39,6 +41,7 @@ rule all:
         # AUTHOR_2014,
         # PAPER_2014,
         RANDOM_RESULT_2014_2018,
+        RANDOM_RESULT_2014_2018_INTERACTIVE,
         
 
 rule scrape_03_04:
@@ -56,3 +59,7 @@ rule scrape_2005_2013:
 rule scrape_2014_onward_paper_session:
     output: RANDOM_RESULT_2014_2018
     shell: "python scripts/scrape_2014_onward_paper_session.py {output}"
+
+rule scrape_2014_onward_interactive_paper:
+    output: RANDOM_RESULT_2014_2018_INTERACTIVE
+    shell: "python scripts/scrape_2014_onward_interactive_paper.py {output}"
