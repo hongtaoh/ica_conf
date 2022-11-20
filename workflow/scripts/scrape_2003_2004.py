@@ -171,6 +171,7 @@ if __name__ == '__main__':
 			page_num = i
 			if i >= 10:
 				if year == '2004':
+					print('2004!')
 					select = Select(driver.find_element(
 						By.XPATH, '//div[@class="iterator"][1] // select'
 					))

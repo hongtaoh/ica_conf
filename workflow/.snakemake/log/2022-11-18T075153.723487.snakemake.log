@@ -1,0 +1,29 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job             count    min threads    max threads
+------------  -------  -------------  -------------
+all                 1              1              1
+scrape_03_04        1              1              1
+total               2              1              1
+
+Select jobs to execute...
+
+[Fri Nov 18 07:51:54 2022]
+rule scrape_03_04:
+    output: ../data/interim/paper_df_2003_2004.csv, ../data/interim/author_df_2003_2004.csv
+    jobid: 1
+    resources: tmpdir=/var/folders/z2/5kr96fyn63z_tj_bwr33t5dw0000gn/T
+
+Terminating processes on user request, this might take some time.
+[Fri Nov 18 07:56:34 2022]
+Error in rule scrape_03_04:
+    jobid: 1
+    output: ../data/interim/paper_df_2003_2004.csv, ../data/interim/author_df_2003_2004.csv
+    shell:
+        python scripts/scrape_2003_2004.py ../data/interim/paper_df_2003_2004.csv ../data/interim/author_df_2003_2004.csv
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Complete log: .snakemake/log/2022-11-18T075153.723487.snakemake.log
