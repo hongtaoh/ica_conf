@@ -12,6 +12,10 @@ But why ICA conference data? Why do we need it? What is it good for? I have the 
 
   3. For larger scientometric analysis. The ICA annual conference data that we collected is larger. It contains over 40K papers and 120K scholars (a rough guess). This dataset is useful for large scale scientometric analysis. For example, to study the topic evolution of communication studies in the past 20 years or to study academic collaboration or mobility within the filed of communication 
 
+  4. Contribute to open science. We aim to make our dataset public so that other researchers have equal access to these data (from Yiwei)
+
+  5. With these data, we can understand the diversity of communication scholars & research topics better. Right now, we only have acess to journal data, but that is only part of communication scholars and communication research. To get a broader picture and a deeper understanding, we need to data about the conference as well. 
+
 ## Plans
 
 I am thinking of (1) design an interactive paper explorationn system, (2) clean and make public the the dataset, and (3) write a paper based on preliminary results. I do not plan to do comprehensive analyses based on the data; that is the job for other scholars if they want to use our dataset. 
