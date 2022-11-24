@@ -171,7 +171,10 @@ def get_abstract(paper_meta_dict_list):
 		By.CSS_SELECTOR, 'blockquote.tight'
 	)[-1]
 	abstract = abstract.text
+	abstract = " ".join(abstract.splitlines()).strip()
+
 	paper_meta_dict_list[-1]['Abstract'] = abstract
+
 	return abstract
 
 def scrape_one_page(year, page_num, paper_meta_dict_list, author_dict_list):

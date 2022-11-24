@@ -1,0 +1,36 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                         count    min threads    max threads
+------------------------  -------  -------------  -------------
+all                             1              1              1
+scrape_2014_onward_paper        1              1              1
+total                           2              1              1
+
+Select jobs to execute...
+
+[Thu Nov 24 15:10:16 2022]
+rule scrape_2014_onward_paper:
+    output: ../data/interim/session_df_2014_2018.csv, ../data/interim/author_df_2014_2018.csv, ../data/interim/paper_df_2014_2018.csv
+    jobid: 3
+    reason: Missing output files: ../data/interim/author_df_2014_2018.csv
+    resources: tmpdir=/var/folders/jh/8bnrrjds16sbkbtxfzdx393w0000gn/T
+
+[Thu Nov 24 15:14:18 2022]
+Finished job 3.
+1 of 2 steps (50%) done
+Select jobs to execute...
+
+[Thu Nov 24 15:14:18 2022]
+localrule all:
+    input: ../data/interim/paper_df_2003_2004.csv, ../data/interim/author_df_2003_2004.csv, ../data/interim/paper_df_2005_2013.csv, ../data/interim/author_df_2005_2013.csv, ../data/interim/session_df_2014_2018.csv, ../data/interim/author_df_2014_2018.csv, ../data/interim/paper_df_2014_2018.csv, ../data/interim/interactive_session_df_2014_2018.csv, ../data/interim/interactive_author_df_2014_2018.csv, ../data/interim/interactive_paper_df_2014_2018.csv
+    jobid: 0
+    reason: Input files updated by another job: ../data/interim/author_df_2014_2018.csv, ../data/interim/session_df_2014_2018.csv, ../data/interim/paper_df_2014_2018.csv
+    resources: tmpdir=/var/folders/jh/8bnrrjds16sbkbtxfzdx393w0000gn/T
+
+[Thu Nov 24 15:14:18 2022]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: .snakemake/log/2022-11-24T151016.135054.snakemake.log

@@ -1,0 +1,31 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                                     count    min threads    max threads
+------------------------------------  -------  -------------  -------------
+all                                         1              1              1
+scrape_2014_onward_interactive_paper        1              1              1
+scrape_2014_onward_paper                    1              1              1
+total                                       3              1              1
+
+Select jobs to execute...
+
+[Thu Nov 24 12:58:43 2022]
+rule scrape_2014_onward_paper:
+    output: ../data/interim/session_df_2014_2018.csv, ../data/interim/author_df_2014_2018.csv, ../data/interim/paper_df_2014_2018.csv
+    jobid: 3
+    reason: Missing output files: ../data/interim/paper_df_2014_2018.csv, ../data/interim/session_df_2014_2018.csv, ../data/interim/author_df_2014_2018.csv
+    resources: tmpdir=/var/folders/jh/8bnrrjds16sbkbtxfzdx393w0000gn/T
+
+Terminating processes on user request, this might take some time.
+[Thu Nov 24 12:59:26 2022]
+Error in rule scrape_2014_onward_paper:
+    jobid: 3
+    output: ../data/interim/session_df_2014_2018.csv, ../data/interim/author_df_2014_2018.csv, ../data/interim/paper_df_2014_2018.csv
+    shell:
+        python scripts/scrape_2014_onward_paper.py ../data/interim/session_df_2014_2018.csv ../data/interim/author_df_2014_2018.csv ../data/interim/paper_df_2014_2018.csv
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Complete log: .snakemake/log/2022-11-24T125843.123371.snakemake.log

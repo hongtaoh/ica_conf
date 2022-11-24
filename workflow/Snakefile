@@ -19,12 +19,12 @@ PAPER_2003_2004 = pjoin(INTERIM_DATA_DIR, "paper_df_2003_2004.csv")
 AUTHOR_2003_2004 = pjoin(INTERIM_DATA_DIR, "author_df_2003_2004.csv")
 PAPER_2005_2013 = pjoin(INTERIM_DATA_DIR, "paper_df_2005_2013.csv")
 AUTHOR_2005_2013 = pjoin(INTERIM_DATA_DIR, "author_df_2005_2013.csv")
-SESSION_2014 = pjoin(INTERIM_DATA_DIR, 'session_df_2014.csv')
-AUTHOR_2014 = pjoin(INTERIM_DATA_DIR, 'author_df_2014.csv')
-PAPER_2014 = pjoin(INTERIM_DATA_DIR, 'paper_df_2014.csv')
-RANDOM_RESULT_2014_2018 = pjoin(INTERIM_DATA_DIR, 'random_result_2014_2018.txt')
-RANDOM_RESULT_2014_2018_INTERACTIVE = pjoin(
-    INTERIM_DATA_DIR, 'random_result_2014_2018_interactive.txt')
+SESSION_2014_2018 = pjoin(INTERIM_DATA_DIR, 'session_df_2014_2018.csv')
+AUTHOR_2014_2018 = pjoin(INTERIM_DATA_DIR, 'author_df_2014_2018.csv')
+PAPER_2014_2018 = pjoin(INTERIM_DATA_DIR, 'paper_df_2014_2018.csv')
+INTERACTIVE_SESSION_2014_2018 = pjoin(INTERIM_DATA_DIR, 'interactive_session_df_2014_2018.csv')
+INTERACTIVE_AUTHOR_2014_2018 = pjoin(INTERIM_DATA_DIR, 'interactive_author_df_2014_2018.csv')
+INTERACTIVE_PAPER_2014_2018 = pjoin(INTERIM_DATA_DIR, 'interactive_paper_df_2014_2018.csv')
 
 
 ###############################################################################
@@ -37,12 +37,12 @@ rule all:
         AUTHOR_2003_2004,
         PAPER_2005_2013,
         AUTHOR_2005_2013,
-        # SESSION_2014,
-        # AUTHOR_2014,
-        # PAPER_2014,
-        RANDOM_RESULT_2014_2018,
-        RANDOM_RESULT_2014_2018_INTERACTIVE,
-        
+        SESSION_2014_2018,
+        AUTHOR_2014_2018,
+        PAPER_2014_2018,
+        INTERACTIVE_SESSION_2014_2018,
+        INTERACTIVE_AUTHOR_2014_2018,
+        INTERACTIVE_PAPER_2014_2018,
 
 rule scrape_03_04:
     output: 
@@ -56,10 +56,16 @@ rule scrape_2005_2013:
         AUTHOR_2005_2013,
     shell: "python scripts/scrape_2005_2013.py {output}"
 
-rule scrape_2014_onward_paper_session:
-    output: RANDOM_RESULT_2014_2018
-    shell: "python scripts/scrape_2014_onward_paper_session.py {output}"
+rule scrape_2014_onward_paper:
+    output: 
+        SESSION_2014_2018,
+        AUTHOR_2014_2018,
+        PAPER_2014_2018,
+    shell: "python scripts/scrape_2014_onward_paper.py {output}"
 
 rule scrape_2014_onward_interactive_paper:
-    output: RANDOM_RESULT_2014_2018_INTERACTIVE
+    output: 
+        INTERACTIVE_SESSION_2014_2018,
+        INTERACTIVE_AUTHOR_2014_2018,
+        INTERACTIVE_PAPER_2014_2018,
     shell: "python scripts/scrape_2014_onward_interactive_paper.py {output}"
