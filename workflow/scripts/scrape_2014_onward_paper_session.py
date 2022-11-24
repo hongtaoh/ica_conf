@@ -88,24 +88,25 @@ def update_session_meta(session_tuples):
 		chair_es = chair_graybox.find_elements(
 			By.CSS_SELECTOR, 'li'
 		)
-		if len(chair_es) == 1:
-			chair_info = chair_e.text
-			chair_name = chair_info.split(', ')[0]
-			chair_aff = chair_info.split(', ')[1]
-		# this is to solve the issue of when there are multiple chairs. For example,
-		# year 2018, session 'Research Escalator - Part 1'
-		if len(chair_es) > 1:
-			chair_name = ''
-			chair_aff = ''
-			for chair_e in chair_es:
-				chair_info = chair_e.text
-				chair_name_i = chair_info.split(', ')[0]
-				chair_aff_i = chair_info.split(', ')[1]
-				chair_name += chair_name_i
-				chair_aff += chair_aff_i
-				if chair_e != chair_es[-1]:
-					chair_name += '; '
-					chair_aff += '; '
+		if chair_es:
+		    if len(chair_es) == 1:
+		        chair_info = chair_es[0].text
+		        chair_name = chair_info.split(', ')[0]
+		        chair_aff = chair_info.split(', ')[1]
+		    # this is to solve the issue of when there are multiple chairs. For example,
+		    # year 2018, session 'Research Escalator - Part 1'
+		    else:
+		        chair_name = ''
+		        chair_aff = ''
+		        for chair_e in chair_es:
+		            chair_info = chair_e.text
+		            chair_name_i = chair_info.split(', ')[0]
+		            chair_aff_i = chair_info.split(', ')[1]
+		            chair_name += chair_name_i
+		            chair_aff += chair_aff_i
+		            if chair_e != chair_es[-1]:
+		                chair_name += '; '
+		                chair_aff += '; '
 	except:
 		chair_name = None
 		chair_aff = None
@@ -338,5 +339,3 @@ if __name__ == '__main__':
 	with open(RANDOM_RESULT_2014_2018, 'w') as f:
 		for year in years:
 			f.write("%s\n" % year)
-		
-	
