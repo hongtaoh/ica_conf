@@ -245,8 +245,8 @@ if __name__ == '__main__':
 
 		# to assign paper id. initiate it as 0 and then add 1 each time
 		paper_id = 0
-		# for s in sessions:
-		for s in random_sessions:
+		for s in sessions:
+		# for s in random_sessions:
 			session_index = sessions.index(s)
 			s_link = s.get_attribute('href')
 			# open a new window
