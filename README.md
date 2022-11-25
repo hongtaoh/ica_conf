@@ -14,7 +14,7 @@ But why ICA conference data? Why do we need it? What is it good for? I have the 
 
   4. Contribute to open science. We aim to make our dataset public so that other researchers have equal access to these data (from Yiwei)
 
-  5. With these data, we can understand the diversity of communication scholars & research topics better. Right now, we only have acess to journal data, but that is only part of communication scholars and communication research. To get a broader picture and a deeper understanding, we need to data about the conference as well. 
+  5. With these data, we can understand the diversity of communication scholars & research topics better. Right now, we only have acess to journal data, but that is only part of communication scholars and communication research. To get a broader picture and a deeper understanding, we need data about the conference as well. 
 
 ## Plans
 
