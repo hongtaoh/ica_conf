@@ -106,3 +106,5 @@ I used [`snakemake`](https://github.com/hongtaoh/snakemake-tutorial) to manage t
 - `scrape_2014_onward_paper_session.py` scraped data from 2014 to 2018, for the paper sessions. 
 
 - `scrape_2014_onward_interactive_paper.py` scraped data for posters (extended abstracts) from 2014 to 2018. 
+
+- `combine_all_data.py` cleaned, organized, and concatenated data. 
