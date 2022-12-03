@@ -20,7 +20,7 @@ But why ICA conference data? Why do we need it? What is it good for? I have the 
 
 ## Data sources
 
-
+![Data sources](ica_snap.png)
 
 - [ICA 2003](https://convention2.allacademic.com/one/ica/ica03/)
 - [ICA 2004](https://convention2.allacademic.com/one/ica/ica04/)
