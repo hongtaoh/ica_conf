@@ -12,7 +12,7 @@ But why ICA conference data? Why do we need it? What is it good for? I have the 
 
   2. Publications might have biases (For example, https://doi.org/10.1093/hcr/hqz015). Not all research projects end up being published. To circumbent publication bias, it is important to see the topics that are researched but not published (This idea is inspired by Yiwei Xu from Cornell). ICA annual conferences are a good starting point for communication science. Note that ICA annual conferences are peer reviewed and selective. Therefore, even though they are not publisehd, their quality is still quaranteed. This is different from non peer-review preprints. 
 
-  3. For larger scientometric analysis. The ICA annual conference data that we collected is larger. It contains over 40K papers and 120K scholars (a rough guess). This dataset is useful for large scale scientometric analysis. For example, to study the topic evolution of communication studies in the past 20 years or to study academic collaboration or mobility within the filed of communication 
+  3. For larger scientometric analysis. The ICA annual conference data that we collected is larger. It contains over 30K papers and 70K authors (a rough guess). This dataset is useful for large scale scientometric analysis. For example, to study the topic evolution of communication studies in the past 20 years or to study academic collaboration or mobility within the filed of communication 
 
   4. Contribute to open science. We aim to make our dataset public so that other researchers have equal access to these data (from Yiwei)
 
