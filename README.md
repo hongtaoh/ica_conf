@@ -8,7 +8,7 @@ But why ICA conference data? Why do we need it? What is it good for? I have the 
 
   1. To inspire new research ideas. Right now, most communication literature came from journal papers (searched mostly in Google Scholar). Findings from conferences may provide a new perspective and inspire new directions. 
 
-  2. Publications might have biases (For example, https://doi.org/10.1093/hcr/hqz015). Not all research projects end up being published. To circumbent publication bias, it is important to see the topics that are researched but not published (This idea is inspired by Yiwei Xu from Cornell). ICA annual conferences are a good starting poing for communication science. Note that ICA annual conferences are peer reviewed and selective. Therefore, even though they are not publisehd, their quality is still quaranteed. This is different from non peer-review preprints. 
+  2. Publications might have biases (For example, https://doi.org/10.1093/hcr/hqz015). Not all research projects end up being published. To circumbent publication bias, it is important to see the topics that are researched but not published (This idea is inspired by Yiwei Xu from Cornell). ICA annual conferences are a good starting point for communication science. Note that ICA annual conferences are peer reviewed and selective. Therefore, even though they are not publisehd, their quality is still quaranteed. This is different from non peer-review preprints. 
 
   3. For larger scientometric analysis. The ICA annual conference data that we collected is larger. It contains over 40K papers and 120K scholars (a rough guess). This dataset is useful for large scale scientometric analysis. For example, to study the topic evolution of communication studies in the past 20 years or to study academic collaboration or mobility within the filed of communication 
 
@@ -30,7 +30,45 @@ This repository now has three folders:
 
 ## Data
 
-You do not need to pay any attention to folders of `deprecated`. Right now, all preliminary data is stored in the folder of `interim`. I still need to process them. Processed data will be pushed to the folder of `processed`.
+You do not need to pay any attention to folders of `deprecated`. Right now, all preliminary data is stored in the folder of `interim`. 
+
+The folder of `processed` contains data that are ready to analyze and visualize. There are three files now:
+  - `paper_df.csv`: This is paper data. 
+  - `author_df.csv`: author data
+  - `session_df.csv`: session data
+
+### Paper Data
+
+Paper data has the following columns:
+  - `Paper ID`: I assigned an ID to each paper, in the format of `year-index`
+  - `Title`: the title of this conference paper
+  - `Paper Type`: the type of this presentation, either `Paper` or `Poster`. Note that the ICA website did not distinguish these two types until 2014. Therefore, all presentations prior to 2014 are classified as `Paper`, even though they might have been `Poster` instead.
+  - `Abstract`: paper abstract
+  - `Number of Authors`: number of authors in this paper
+  - `Year`: the year when this paper was presented
+  - `Session`: the specific session title
+  - `Division/Unit`: the division (unit) this session is organized by. 
+
+### Author Data
+
+Author data has the following columns:
+  - `Paper ID`: I assigned an ID to each paper, in the format of `year-index`
+  - `Paper Title`: the title of this conference paper
+  - `Year`: the year when this paper was presented
+  - `Number of Authors`: number of authors in this paper
+  - `Author Position`: the position of this author
+  - `Author Name`: author name
+  - `Author Affiliation`: author affiliation
+
+### Session Data
+
+Session data has the following columns:
+  - `year`: the year when this session occurred
+  - `session type`: either `paper session` or `interactive paper session` (i.e., poster session)
+  - `session title`: the title of this session
+  - `sub unit`: the division/unit this session is organized by
+  - `chair name`: the name of this session chair
+  - `chair aff`: the affiliation of this session chair
 
 ## Workflow
 
