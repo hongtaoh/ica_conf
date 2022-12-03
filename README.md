@@ -1,8 +1,10 @@
 # ICA Conference Data Explorer 
 
+![ICA Conference Data Explorer](logo.png)
+
 ## Why this project?
 
-It surprised me that we had over 20 years of data of ICA annual conferences and yet no one has organized it in a way that every researcher has easy access to it. It is a painful effort to scrape all the data manually and I do not expect every scholar to do that. 
+It surprised me that we had over 20 years of data of [ICA annual conferences](https://www.icahdq.org/page/PastFuture) and yet no one has organized it in a way that every researcher has easy access to it. It is a painful effort to scrape all the data manually and I do not expect every scholar to do that. 
 
 But why ICA conference data? Why do we need it? What is it good for? I have the following ideas:
 
@@ -15,6 +17,27 @@ But why ICA conference data? Why do we need it? What is it good for? I have the 
   4. Contribute to open science. We aim to make our dataset public so that other researchers have equal access to these data (from Yiwei)
 
   5. With these data, we can understand the diversity of communication scholars & research topics better. Right now, we only have acess to journal data, but that is only part of communication scholars and communication research. To get a broader picture and a deeper understanding, we need data about the conference as well. 
+
+## Data sources
+
+
+
+- [ICA 2003](https://convention2.allacademic.com/one/ica/ica03/)
+- [ICA 2004](https://convention2.allacademic.com/one/ica/ica04/)
+- [ICA 2005](https://convention2.allacademic.com/one/ica/ica05/)
+- [ICA 2006](https://convention2.allacademic.com/one/ica/ica06/)
+- [ICA 2007](https://convention2.allacademic.com/one/ica/ica07/)
+- [ICA 2008](https://convention2.allacademic.com/one/ica/ica08/)
+- [ICA 2009](https://convention2.allacademic.com/one/ica/ica09/)
+- [ICA 2010](https://convention2.allacademic.com/one/ica/ica10/)
+- [ICA 2011](https://convention2.allacademic.com/one/ica/ica11/)
+- [ICA 2012](https://convention2.allacademic.com/one/ica/ica12/)
+- [ICA 2013](https://convention2.allacademic.com/one/ica/ica13/)
+- [ICA 2014](https://convention2.allacademic.com/one/ica/ica14/)
+- [ICA 2015](https://convention2.allacademic.com/one/ica/ica15/)
+- [ICA 2016](https://convention2.allacademic.com/one/ica/ica16/)
+- [ICA 2017](https://convention2.allacademic.com/one/ica/ica17/)
+- [ICA 2018](https://convention2.allacademic.com/one/ica/ica18/)
 
 ## Plans
 
