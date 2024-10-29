@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Query, Path, HTTPException
 from typing import List, Optional
 import os
+from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 uri = os.getenv("MONGODB_URI")
@@ -18,6 +19,14 @@ except Exception as e:
     raise 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # React app URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def root():
@@ -61,6 +70,17 @@ async def get_paper_by_id(paper_id: str):
     if paper is None:
         raise HTTPException(status_code=404, detail="Paper not found")
     return paper
+
+@app.get("/sample_papers", response_model=List[dict])
+async def get_sample_papers(
+    limit: int = Query(100, description="Number of random sample papers")
+):
+    sample_papers = list(papers_collection.aggregate([
+        {'$sample': {"size":limit}}
+    ]))
+    for paper in sample_papers:
+        paper.pop("_id", None)
+    return sample_papers
 
 @app.get("/papers/{paper_id}/authors", response_model=List[dict])
 async def get_authors_by_paper_id(
