@@ -86,12 +86,12 @@ Author data has the following columns:
 ### Session Data
 
 Session data has the following columns:
-  - `year`: the year when this session occurred
-  - `session type`: either `paper session` or `interactive paper session` (i.e., poster session)
-  - `session title`: the title of this session
-  - `sub unit`: the division/unit this session is organized by
-  - `chair name`: the name of this session chair
-  - `chair aff`: the affiliation of this session chair
+  - `Year`: the year when this session occurred
+  - `Session Type`: either `paper session` or `interactive paper session` (i.e., poster session)
+  - `Session Title`: the title of this session
+  - `Division/Unit`: the division/unit this session is organized by
+  - `Chair Name`: the name of this session chair
+  - `Chair Affiliation`: the affiliation of this session chair
 
 ## Workflow
 
