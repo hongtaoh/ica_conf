@@ -54,31 +54,31 @@ rule all:
         AUTHOR_DF,
         SESSION_DF,
 
-rule scrape_03_04:
-    output: 
-        PAPER_2003_2004,
-        AUTHOR_2003_2004,
-    shell: "python scripts/scrape_2003_2004.py {output}"
+# rule scrape_03_04:
+#     output: 
+#         PAPER_2003_2004,
+#         AUTHOR_2003_2004,
+#     shell: "python scripts/scrape_2003_2004.py {output}"
 
-rule scrape_2005_2013:
-    output: 
-        PAPER_2005_2013,
-        AUTHOR_2005_2013,
-    shell: "python scripts/scrape_2005_2013.py {output}"
+# rule scrape_2005_2013:
+#     output: 
+#         PAPER_2005_2013,
+#         AUTHOR_2005_2013,
+#     shell: "python scripts/scrape_2005_2013.py {output}"
 
-rule scrape_2014_onward_paper:
-    output: 
-        SESSION_2014_2018,
-        AUTHOR_2014_2018,
-        PAPER_2014_2018,
-    shell: "python scripts/scrape_2014_onward_paper.py {output}"
+# rule scrape_2014_onward_paper:
+#     output: 
+#         SESSION_2014_2018,
+#         AUTHOR_2014_2018,
+#         PAPER_2014_2018,
+#     shell: "python scripts/scrape_2014_onward_paper.py {output}"
 
-rule scrape_2014_onward_interactive_paper:
-    output: 
-        INTERACTIVE_SESSION_2014_2018,
-        INTERACTIVE_AUTHOR_2014_2018,
-        INTERACTIVE_PAPER_2014_2018,
-    shell: "python scripts/scrape_2014_onward_interactive_paper.py {output}"
+# rule scrape_2014_onward_interactive_paper:
+#     output: 
+#         INTERACTIVE_SESSION_2014_2018,
+#         INTERACTIVE_AUTHOR_2014_2018,
+#         INTERACTIVE_PAPER_2014_2018,
+#     shell: "python scripts/scrape_2014_onward_interactive_paper.py {output}"
 
 rule combine_all_data:
     input:

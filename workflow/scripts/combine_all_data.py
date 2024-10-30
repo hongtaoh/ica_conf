@@ -53,6 +53,7 @@ if __name__ == '__main__':
 
 	# author_df 
 	author_df = pd.concat([author1, author2, author3, author4], axis = 0)
+	author_df.rename(columns={'Paper Title':'Title'}, inplace=True)
 
 	print(f'Author DF is done. Its shape: {author_df.shape}')
 
@@ -106,6 +107,10 @@ if __name__ == '__main__':
 
 	# concatenate session df 
 	session_df = pd.concat([session1, session2], axis = 0)
+	session_df.columns = [
+		'Year', 'Session Type', 'Session Title', 
+		'Division/Unit', 'Chair Name', 'Chair Affiliation'
+	]
 
 	# write to file
 	paper_df.to_csv(PAPER_DF, index = False)

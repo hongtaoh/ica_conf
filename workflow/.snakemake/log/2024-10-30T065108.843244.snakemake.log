@@ -1,0 +1,8 @@
+Building DAG of jobs...
+MissingInputException in rule combine_all_data in file /Users/hongtaoh/Desktop/github/ica_conf/workflow/Snakefile, line 83:
+Missing input files for rule combine_all_data:
+    output: ../data/processed/paper_df.csv, ../data/processed/author_df.csv, ../data/processed/session_df.csv
+    affected files:
+        ../data/interim/author_df_2014_2018.csv
+        ../data/interim/paper_df_2014_2018.csv
+        ../data/interim/session_df_2014_2018.csv
