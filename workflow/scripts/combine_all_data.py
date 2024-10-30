@@ -95,6 +95,15 @@ if __name__ == '__main__':
 	# concatenate paper df
 	paper_df = pd.concat([paper1, paper2, paper3, paper4], axis = 0)
 
+	# get id: authors dic
+	paperid_authors_dic = {}
+	for paper_id, group in author_df.groupby('Paper ID'):
+		paperid_authors_dic[paper_id] = list(group['Author Name'])
+	
+	# add authors to paper_df
+	paper_df['Authors'] = paper_df['Paper ID'].apply(
+		lambda x: ", ".join(paperid_authors_dic[x]) if x in paperid_authors_dic else np.nan)
+
 	# concatenate session df 
 	session_df = pd.concat([session1, session2], axis = 0)
 
