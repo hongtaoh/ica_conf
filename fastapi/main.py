@@ -34,6 +34,8 @@ async def root():
 
 @app.get("/papers", response_model=List[dict])
 async def get_papers(
+    page: int = Query(1, description="Page number"),
+    limit: int = Query(50, description="Number of items per page"),
     year: Optional[int] = Query(None),
     paper_type: Optional[str] = Query(None, description="Type of presentation, either Paper or Poster"),
     session: Optional[str] = Query(None, description="Session title"),
@@ -61,7 +63,9 @@ async def get_papers(
         query['Abstract'] = {"$regex": abstract_contains, "$options": "i"}
     if session_contains:
         query['Session'] = {"$regex": session_contains, "$options": "i"}
-    papers = list(papers_collection.find(query, {"_id":0}))
+    # Pagination
+    skip = (page - 1) * limit
+    papers = list(papers_collection.find(query, {"_id": 0}).skip(skip).limit(limit))
     return papers
 
 @app.get("/papers/{paper_id}")
@@ -82,39 +86,42 @@ async def get_sample_papers(
         paper.pop("_id", None)
     return sample_papers
 
-@app.get("/papers/{paper_id}/authors", response_model=List[dict])
-async def get_authors_by_paper_id(
-    paper_id: str = Path(..., description="Unique ID assigned to the paper"),
-):
-    query = {'Paper ID': paper_id}
-    authors = list(authors_collection.find(query, {"_id":0}))
-    return authors
 
-@app.get("/authors", response_model=List[dict])
-async def get_authors(
-    paper_id: Optional[str] = Query(None, description="Unique ID assigned to the paper"),
-    paper_title: Optional[str] = Query(None, description="Paper Title"),
-    year: Optional[int] = Query(None),
-    num_authors: Optional[int] = Query(None, alias='number_of_authors', description="Number of authors"),
-    author_position: Optional[int] = Query(None, description="Position of the author"),
-    author_name: Optional[str] = Query(None),
-    author_affiliation: Optional[str] = Query(None),
-    title_contains: Optional[str] = Query(None, description="Keyword to search in the paper title"),
-):
-    query = {
-        "Year": year,
-        "Number of Authors": num_authors,
-        "Author Position": author_position,
-        "Paper ID": paper_id,
-        "Title": paper_title,
-        "Author Name": author_name,
-        "Author Affiliation": author_affiliation
-    }
-    query = {k: v for k, v in query.items() if v is not None}
-    if title_contains:
-        query['Title'] = {"$regex": title_contains, "$options":"i"}
-    authors = list(authors_collection.find(query, {"_id":0}))
-    return authors
+
+
+# @app.get("/papers/{paper_id}/authors", response_model=List[dict])
+# async def get_authors_by_paper_id(
+#     paper_id: str = Path(..., description="Unique ID assigned to the paper"),
+# ):
+#     query = {'Paper ID': paper_id}
+#     authors = list(authors_collection.find(query, {"_id":0}))
+#     return authors
+
+# @app.get("/authors", response_model=List[dict])
+# async def get_authors(
+#     paper_id: Optional[str] = Query(None, description="Unique ID assigned to the paper"),
+#     paper_title: Optional[str] = Query(None, description="Paper Title"),
+#     year: Optional[int] = Query(None),
+#     num_authors: Optional[int] = Query(None, alias='number_of_authors', description="Number of authors"),
+#     author_position: Optional[int] = Query(None, description="Position of the author"),
+#     author_name: Optional[str] = Query(None),
+#     author_affiliation: Optional[str] = Query(None),
+#     title_contains: Optional[str] = Query(None, description="Keyword to search in the paper title"),
+# ):
+#     query = {
+#         "Year": year,
+#         "Number of Authors": num_authors,
+#         "Author Position": author_position,
+#         "Paper ID": paper_id,
+#         "Title": paper_title,
+#         "Author Name": author_name,
+#         "Author Affiliation": author_affiliation
+#     }
+#     query = {k: v for k, v in query.items() if v is not None}
+#     if title_contains:
+#         query['Title'] = {"$regex": title_contains, "$options":"i"}
+#     authors = list(authors_collection.find(query, {"_id":0}))
+#     return authors
 
 @app.get("/sessions", response_model=List[dict])
 async def get_sessions(

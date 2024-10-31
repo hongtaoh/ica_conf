@@ -16,9 +16,9 @@ AUTHOR_2014_2018 = sys.argv[7]
 INTERACTIVE_AUTHOR_2014_2018 = sys.argv[8]
 SESSION_2014_2018 = sys.argv[9]
 INTERACTIVE_SESSION_2014_2018 = sys.argv[10]
-PAPER_DF = sys.argv[11]
-AUTHOR_DF = sys.argv[12]
-SESSION_DF = sys.argv[13]
+PAPERS_DF = sys.argv[11]
+AUTHORS_DF = sys.argv[12]
+SESSIONS_DF = sys.argv[13]
 
 if __name__ == '__main__':
 	# import all data 
@@ -99,9 +99,10 @@ if __name__ == '__main__':
 	# get id: authors dic
 	paperid_authors_dic = {}
 	for paper_id, group in author_df.groupby('Paper ID'):
-		paperid_authors_dic[paper_id] = list(group['Author Name'])
-	
-	# add authors to paper_df
+		paperid_authors_dic[paper_id] = np.array(group['Author Name'])
+
+	# paper_df['Authors'] = paper_df['Paper ID'].apply(lambda x: paperid_authors_dic.get(x, np.array([])))
+
 	paper_df['Authors'] = paper_df['Paper ID'].apply(
 		lambda x: ", ".join(paperid_authors_dic[x]) if x in paperid_authors_dic else np.nan)
 
@@ -113,8 +114,8 @@ if __name__ == '__main__':
 	]
 
 	# write to file
-	paper_df.to_csv(PAPER_DF, index = False)
-	author_df.to_csv(AUTHOR_DF, index = False)
-	session_df.to_csv(SESSION_DF, index = False)
+	paper_df.to_csv(PAPERS_DF, index=False)
+	author_df.to_csv(AUTHORS_DF, index=False)
+	session_df.to_csv(SESSIONS_DF, index=False)
 
 	print('Files written. All should be in place now.')

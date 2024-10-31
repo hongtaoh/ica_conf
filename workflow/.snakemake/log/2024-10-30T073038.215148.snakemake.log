@@ -1,0 +1,37 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                 count
+----------------  -------
+all                     1
+combine_all_data        1
+total                   2
+
+Select jobs to execute...
+
+[Wed Oct 30 07:30:38 2024]
+rule combine_all_data:
+    input: ../data/interim/paper_df_2003_2004.csv, ../data/interim/paper_df_2005_2013.csv, ../data/interim/paper_df_2014_2018.csv, ../data/interim/interactive_paper_df_2014_2018.csv, ../data/interim/author_df_2003_2004.csv, ../data/interim/author_df_2005_2013.csv, ../data/interim/author_df_2014_2018.csv, ../data/interim/interactive_author_df_2014_2018.csv, ../data/interim/session_df_2014_2018.csv, ../data/interim/interactive_session_df_2014_2018.csv
+    output: ../data/processed/paper_df.csv, ../data/processed/author_df.csv, ../data/processed/session_df.csv
+    jobid: 1
+    reason: Missing output files: ../data/processed/author_df.csv, ../data/processed/session_df.csv, ../data/processed/paper_df.csv
+    resources: tmpdir=/var/folders/wx/xz5y_06d15q5pgl_mhv76c8r0000gn/T
+
+[Wed Oct 30 07:30:41 2024]
+Finished job 1.
+1 of 2 steps (50%) done
+Select jobs to execute...
+
+[Wed Oct 30 07:30:41 2024]
+localrule all:
+    input: ../data/processed/paper_df.csv, ../data/processed/author_df.csv, ../data/processed/session_df.csv
+    jobid: 0
+    reason: Input files updated by another job: ../data/processed/author_df.csv, ../data/processed/paper_df.csv, ../data/processed/session_df.csv
+    resources: tmpdir=/var/folders/wx/xz5y_06d15q5pgl_mhv76c8r0000gn/T
+
+[Wed Oct 30 07:30:41 2024]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: .snakemake/log/2024-10-30T073038.215148.snakemake.log

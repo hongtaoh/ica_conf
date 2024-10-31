@@ -30,9 +30,12 @@ INTERACTIVE_PAPER_2014_2018 = pjoin(INTERIM_DATA_DIR, 'interactive_paper_df_2014
 ###############################################################################
 # Processed outputs
 ###############################################################################
-PAPER_DF = pjoin(PROCESSED_DATA_DIR, 'paper_df.csv')
-AUTHOR_DF = pjoin(PROCESSED_DATA_DIR, 'author_df.csv')
-SESSION_DF = pjoin(PROCESSED_DATA_DIR, 'session_df.csv')
+PAPERS_DF = pjoin(PROCESSED_DATA_DIR, 'papers.csv')
+AUTHORS_DF = pjoin(PROCESSED_DATA_DIR, 'authors.csv')
+SESSIONS_DF = pjoin(PROCESSED_DATA_DIR, 'sessions.csv')
+PAPERS_JSON = pjoin(PROCESSED_DATA_DIR, 'papers.json')
+AUTHORS_JSON = pjoin(PROCESSED_DATA_DIR, 'authors.json')
+SESSIONS_JSON = pjoin(PROCESSED_DATA_DIR, 'sessions.json')
 
 ###############################################################################
 # Workflows
@@ -50,9 +53,12 @@ rule all:
         # INTERACTIVE_SESSION_2014_2018,
         # INTERACTIVE_AUTHOR_2014_2018,
         # INTERACTIVE_PAPER_2014_2018,
-        PAPER_DF,
-        AUTHOR_DF,
-        SESSION_DF,
+        # PAPERS_DF,
+        # AUTHORS_DF,
+        # SESSIONS_DF,
+        PAPERS_JSON,
+        AUTHORS_JSON,
+        SESSIONS_JSON,          
 
 # rule scrape_03_04:
 #     output: 
@@ -80,20 +86,31 @@ rule all:
 #         INTERACTIVE_PAPER_2014_2018,
 #     shell: "python scripts/scrape_2014_onward_interactive_paper.py {output}"
 
-rule combine_all_data:
+# rule combine_all_data:
+#     input:
+#         PAPER_2003_2004,
+#         PAPER_2005_2013,
+#         PAPER_2014_2018,
+#         INTERACTIVE_PAPER_2014_2018,
+#         AUTHOR_2003_2004,
+#         AUTHOR_2005_2013,
+#         AUTHOR_2014_2018,
+#         INTERACTIVE_AUTHOR_2014_2018,
+#         SESSION_2014_2018,
+#         INTERACTIVE_SESSION_2014_2018
+#     output: 
+#         PAPERS_DF,
+#         AUTHORS_DF,
+#         SESSIONS_DF,
+#     shell: "python scripts/combine_all_data.py {input} {output}"
+
+rule generate_json_and_aggreated_data:
     input:
-        PAPER_2003_2004,
-        PAPER_2005_2013,
-        PAPER_2014_2018,
-        INTERACTIVE_PAPER_2014_2018,
-        AUTHOR_2003_2004,
-        AUTHOR_2005_2013,
-        AUTHOR_2014_2018,
-        INTERACTIVE_AUTHOR_2014_2018,
-        SESSION_2014_2018,
-        INTERACTIVE_SESSION_2014_2018
+        PAPERS_DF,
+        AUTHORS_DF,
+        SESSIONS_DF,
     output: 
-        PAPER_DF,
-        AUTHOR_DF,
-        SESSION_DF,
-    shell: "python scripts/combine_all_data.py {input} {output}"
+        PAPERS_JSON,
+        AUTHORS_JSON,
+        SESSIONS_JSON,
+    shell: "python scripts/generate_json_and_aggreated_data.py {input} {output}"

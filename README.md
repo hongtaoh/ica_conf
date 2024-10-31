@@ -56,9 +56,9 @@ This repository now has three folders:
 You do not need to pay any attention to folders of `deprecated`. Right now, all preliminary data is stored in the folder of `interim`. 
 
 The folder of `processed` contains data that are ready to analyze and visualize. There are three files now:
-  - `paper_df.csv`: This is paper data. 
-  - `author_df.csv`: author data
-  - `session_df.csv`: session data
+  - `papers.csv`: This is paper data. 
+  - `authors.csv`: author data
+  - `sessions.csv`: session data
 
 ### Paper Data
 
@@ -71,6 +71,7 @@ Paper data has the following columns:
   - `Year`: the year when this paper was presented
   - `Session`: the specific session title
   - `Division/Unit`: the division (unit) this session is organized by. 
+  - `Authors`: authors of this paper. 
 
 ### Author Data
 
