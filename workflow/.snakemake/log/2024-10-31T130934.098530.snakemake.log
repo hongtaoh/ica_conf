@@ -1,0 +1,33 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                                 count
+--------------------------------  -------
+all                                     1
+generate_json_and_aggreated_data        1
+total                                   2
+
+Select jobs to execute...
+
+[Thu Oct 31 13:09:34 2024]
+rule generate_json_and_aggreated_data:
+    input: ../data/processed/papers.csv, ../data/processed/authors.csv, ../data/processed/sessions.csv
+    output: ../data/processed/papers.json, ../data/processed/authors.json, ../data/processed/sessions.json
+    jobid: 1
+    reason: Missing output files: ../data/processed/sessions.json, ../data/processed/papers.json, ../data/processed/authors.json
+    resources: tmpdir=/var/folders/wx/xz5y_06d15q5pgl_mhv76c8r0000gn/T
+
+[Thu Oct 31 13:09:35 2024]
+Error in rule generate_json_and_aggreated_data:
+    jobid: 1
+    input: ../data/processed/papers.csv, ../data/processed/authors.csv, ../data/processed/sessions.csv
+    output: ../data/processed/papers.json, ../data/processed/authors.json, ../data/processed/sessions.json
+    shell:
+        python scripts/generate_json_and_aggreated_data.py ../data/processed/papers.csv ../data/processed/authors.csv ../data/processed/sessions.csv ../data/processed/papers.json ../data/processed/authors.json ../data/processed/sessions.json
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2024-10-31T130934.098530.snakemake.log
