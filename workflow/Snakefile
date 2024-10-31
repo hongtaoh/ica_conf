@@ -5,6 +5,7 @@ DATA_DIR = "../data/"
 RAW_DATA_DIR = pjoin(DATA_DIR, "raw")
 INTERIM_DATA_DIR = pjoin(DATA_DIR, "interim")
 PROCESSED_DATA_DIR = pjoin(DATA_DIR, "processed")
+API_DATA_DIR = pjoin(DATA_DIR, 'api')
 
 ###############################################################################
 # Raw Data
@@ -33,9 +34,15 @@ INTERACTIVE_PAPER_2014_2018 = pjoin(INTERIM_DATA_DIR, 'interactive_paper_df_2014
 PAPERS_DF = pjoin(PROCESSED_DATA_DIR, 'papers.csv')
 AUTHORS_DF = pjoin(PROCESSED_DATA_DIR, 'authors.csv')
 SESSIONS_DF = pjoin(PROCESSED_DATA_DIR, 'sessions.csv')
-PAPERS_JSON = pjoin(PROCESSED_DATA_DIR, 'papers.json')
-AUTHORS_JSON = pjoin(PROCESSED_DATA_DIR, 'authors.json')
-SESSIONS_JSON = pjoin(PROCESSED_DATA_DIR, 'sessions.json')
+
+
+###############################################################################
+# API outputs
+###############################################################################
+
+PAPERS_JSON = pjoin(API_DATA_DIR, 'papers.json')
+AUTHORS_JSON = pjoin(API_DATA_DIR, 'authors.json')
+SESSIONS_JSON = pjoin(API_DATA_DIR, 'sessions.json')
 
 ###############################################################################
 # Workflows

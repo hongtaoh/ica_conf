@@ -19,9 +19,9 @@ papers_collection = db['papers']
 authors_collection = db['authors']
 sessions_collection = db['sessions']
 
-PAPERS_JSON = '../data/processed/papers.json'
-AUTHORS_JSON = '../data/processed/authors.json'
-SESSIONS_JSON = '../data/processed/sessions.json'
+PAPERS_JSON = '../data/api/papers.json'
+AUTHORS_JSON = '../data/api/authors.json'
+SESSIONS_JSON = '../data/api/sessions.json'
 
 if __name__ == "__main__":
 

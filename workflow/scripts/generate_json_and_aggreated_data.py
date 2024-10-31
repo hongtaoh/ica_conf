@@ -15,6 +15,7 @@ def process_papers_df(PAPERS_DF):
     papers = pd.read_csv(PAPERS_DF)
     papers.columns = ['paper_id', 'title', 'paper_type', 'abstract', 
                     'number_of_authors', 'year', 'session', 'division', 'authors']
+    papers.number_of_authors = papers.number_of_authors.fillna(0).astype(int)
     papers.drop(['authors'], inplace=True, axis = 1)
     return papers 
 
@@ -88,12 +89,12 @@ def get_sessions_json(papers, session_dic):
     # groupby excludes rows with nan values
         if session in session_dic:
             session_dic[session]['years'] = [int(year) for year in group['year'].unique()]
-            session_dic[session]['paper_count'] = len(group)
+            session_dic[session]['paper_count'] = int(len(group))
         else:
             dic = {}
             dic['session'] = session
             dic['years'] = [int(year) for year in group['year'].unique()]
-            dic['paper_count'] = len(group)
+            dic['paper_count'] = int(len(group))
             dic['session_type'] = None 
             dic['chair_name'] = None 
             dic['chair_affiliation'] = None
@@ -112,14 +113,15 @@ def get_authors_json(AUTHORS_DF):
         # sort by year to make sure affs are in temporal order 
         group = group.sort_values('Year', ascending=True)
         paper_ids = list(group['Paper ID'].unique())
-        affs = group['Author Affiliation'].dropna().unique()
+        affs = list(group['Author Affiliation'].dropna().unique())
         years = [int(year) for year in group['Year'].unique()]
         dic = {
             'author_name': author_name,
             'attend_count': int(len(years)),
             'paper_count': int(len(paper_ids)),
             'paper_ids': paper_ids,
-            'affiliation': " -> ".join(map(str, affs)),
+            'affiliations': affs,
+            'affiliation_history': " -> ".join(map(str, affs)),
             'years_attended': years,
         }
         authors_json.append(dic)
