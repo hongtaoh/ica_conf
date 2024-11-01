@@ -2,6 +2,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
 from fastapi import FastAPI, Query, Path, HTTPException
+import logging
 from typing import List, Optional
 import os
 from fastapi.middleware.cors import CORSMiddleware
@@ -62,8 +63,8 @@ class Session(BaseModel):
     session_type: Optional[str] = None
     chair_name: Optional[str] = None
     chair_affiliation: Optional[str] = None
-    division: str
-    years: Optional[List[int]] = None
+    division: Optional[str] = None
+    years: Optional[List[int]] = []
     paper_count: Optional[int] = None
 
 @app.get("/")
@@ -83,7 +84,9 @@ async def get_papers(
     year: Optional[int] = Query(None),
     session: Optional[str] = Query(None, description="Session title"),
     division: Optional[str] = Query(None, description="Division or Unit that organizes the paper"),
-    has_author: Optional[str] = Query(None, description="Author Name appears in this paper")
+    has_author: Optional[str] = Query(None, description="Author Name appears in this paper"),
+    first_author: Optional[str] = Query(None, description="First author of the paper"),
+    last_author: Optional[str] = Query(None, description="Last author of the paper")
 ):
     query = {
         "year": year,
@@ -103,10 +106,19 @@ async def get_papers(
         query['session'] = {"$regex": session_contains, "$options": "i"}
     if has_author:
         query["authorships.author_name"] = {"$regex": has_author, "$options": "i"}
+    if first_author:
+        query["authorships.0.author_name"] = {"$regex": first_author, "$options": "i"}  # First author
+    elif last_author:
+        query["authorships.-1.author_name"] = {"$regex": last_author, "$options": "i"}  # Last author
 
     # Pagination
     skip = (page - 1) * limit
-    papers = list(papers_collection.find(query, {"_id": 0}).skip(skip).limit(limit))
+    papers = list(
+        papers_collection.find(query, {"_id": 0})
+        .sort("year", -1)  # Sort by year in descending order
+        .skip(skip)
+        .limit(limit)
+    )
     if not papers:
         return []
     return papers
@@ -121,12 +133,16 @@ async def get_paper_by_id(paper_id: str):
 @app.get("/sample_papers", response_model=List[Paper])
 async def get_sample_papers(
     limit: int = Query(100, description="Number of random sample papers"),
+    sort_by: Optional[str] = "year", 
+    order: Optional[int] = -1
 ):
     sample_papers = list(papers_collection.aggregate([
-        {'$sample': {"size":limit}}
+        {'$sample': {"size":limit}},
+        {'$sort': {sort_by: order}},  
+        {'$project': {"_id": 0}}
     ]))
-    for paper in sample_papers:
-        paper.pop("_id", None)
+    # for paper in sample_papers:
+    #     paper.pop("_id", None)
     return sample_papers
 
 @app.get("/authors", response_model=List[Author])
@@ -163,12 +179,14 @@ async def get_authors(
 @app.get("/sample_authors", response_model=List[Author])
 async def get_sample_authors(
     limit: int = Query(100, description="Number of random sample authors"),
+    sort_by: Optional[str] = "attend_count", 
+    order: Optional[int] = -1
 ):
     sample_authors = list(authors_collection.aggregate([
-        {'$sample': {"size":limit}}
+        {'$sample': {"size": limit}},
+        {'$sort': {sort_by: order}},  
+        {'$project': {"_id": 0}}
     ]))
-    for author in sample_authors:
-        author.pop("_id", None)
     return sample_authors
 
 @app.get("/sessions", response_model=List[Session])
@@ -210,10 +228,18 @@ async def get_sessions(
 
 @app.get("/sample_sessions", response_model=List[Session])
 async def get_sample_sessions(
-    limit: int = Query(100, description="Number of random sample sessions"),
+    limit: int = Query(10, description="Number of random sample sessions"),
+    sort_by: Optional[str] = "paper_count", 
+    order: Optional[int] = -1
 ):
-    sample_sessions = list(sessions_collection.aggregate([
-        {'$sample': {"size":limit}},
-        {'$project': {"_id": 0}}
-    ]))
-    return sample_sessions
+    try:
+        sample_sessions = list(sessions_collection.aggregate([
+            {'$sample': {"size":limit}},
+            {'$sort': {sort_by: order}},  
+            {'$project': {"_id": 0}}
+        ]))
+        return sample_sessions
+    except Exception as e:
+        # Log the exception for further analysis
+        logging.error(f"Error fetching sample sessions: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")

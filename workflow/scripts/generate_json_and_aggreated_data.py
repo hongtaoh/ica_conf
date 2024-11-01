@@ -65,6 +65,10 @@ def get_session_dic(SESSIONS_DF):
         dic['chair_name'] = group['Chair Name'].tolist()[0]
         dic['chair_affiliation'] = group['Chair Affiliation'].tolist()[0]
         dic['division'] = group['Division/Unit'].tolist()[0]
+
+        # add what we eventually want
+        dic['years'] = []
+        dic['paper_count'] = 0
         session_dic[session] = dic 
     return session_dic
 
@@ -86,24 +90,32 @@ def update_papers_json(
 
 def get_sessions_json(papers, session_dic):
     for session, group in papers.groupby('session'):
+        has_valid_years = not group['year'].isnull().all()
     # groupby excludes rows with nan values
         if session in session_dic:
-            session_dic[session]['years'] = [int(year) for year in group['year'].unique()]
+            session_dic[session]['years'] = [int(year) for year in group['year'].dropna().unique()] if has_valid_years else []
             session_dic[session]['paper_count'] = int(len(group))
         else:
             dic = {}
             dic['session'] = session
-            dic['years'] = [int(year) for year in group['year'].unique()]
+            dic['years'] = [int(year) for year in group['year'].dropna().unique()] if has_valid_years else []
             dic['paper_count'] = int(len(group))
             dic['session_type'] = None 
             dic['chair_name'] = None 
             dic['chair_affiliation'] = None
             try:
-                dic['division'] = group.division.unique()[0]
+                dic['division'] = group.division.dropna().unique()[0]
             except:
                 dic['division'] = None
             session_dic[session] = dic
     sessions_json = list(session_dic.values())
+    for index, session in enumerate(sessions_json):
+        session['session_id'] = index  # Assign session_id based on index
+        session['paper_count'] = session.get('paper_count', 0)
+        session['years'] = session.get('years', [])  # Ensure 'years' is present
+        # this function is for all sessions present in the papers_df
+        # but the original session_dic is all sessions in sessions_df whose Session Title is not null
+        # so some sessions in session_dic but not in papers_df won't have 'year'
     return sessions_json
 
 def get_authors_json(AUTHORS_DF):
