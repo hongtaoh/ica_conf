@@ -37,6 +37,16 @@ class Authorship(BaseModel):
     author_name: Optional[str] = None
     author_affiliation: Optional[str] = None
 
+class SessionInfo(BaseModel):
+    session: str
+    session_type: Optional[str] = None
+    chair_name: Optional[str] = None
+    chair_affiliation: Optional[str] = None
+    division: Optional[str] = None
+    years: List[int] = []
+    paper_count: Optional[int] = None
+    session_id: Optional[str] = None
+
 class Paper(BaseModel):
     paper_id: str
     title: str
@@ -48,6 +58,7 @@ class Paper(BaseModel):
     division: Optional[str] = None
     authorships: Optional[List[Authorship]] = None
     author_names: Optional[List[str]] = None
+    session_info: Optional[SessionInfo] = None 
 
 class Author(BaseModel):
     author_name: str
@@ -66,6 +77,7 @@ class Session(BaseModel):
     division: Optional[str] = None
     years: Optional[List[int]] = []
     paper_count: Optional[int] = None
+    session_id: str
 
 @app.get("/")
 async def root():
@@ -74,7 +86,7 @@ async def root():
 @app.get("/papers", response_model=List[Paper])
 async def get_papers(
     page: int = Query(1, description="Page number"),
-    limit: int = Query(50, description="Number of items per page"),
+    limit: int = Query(100, description="Number of items per page"),
     paper_id: Optional[str] = Query(None, description="Unique ID assigned to the paper"),
     title_contains: Optional[str] = Query(None, description="Keyword to search in the paper title"),
     paper_type: Optional[str] = Query(None, description="Type of presentation, either Paper or Poster"),
@@ -86,7 +98,8 @@ async def get_papers(
     division: Optional[str] = Query(None, description="Division or Unit that organizes the paper"),
     has_author: Optional[str] = Query(None, description="Author Name appears in this paper"),
     first_author: Optional[str] = Query(None, description="First author of the paper"),
-    last_author: Optional[str] = Query(None, description="Last author of the paper")
+    last_author: Optional[str] = Query(None, description="Last author of the paper"),
+    session_id: Optional[str] = Query(None, description='Session id exact match')
 ):
     query = {
         "year": year,
@@ -104,13 +117,14 @@ async def get_papers(
         query['abstract'] = {"$regex": abstract_contains, "$options": "i"}
     if session_contains:
         query['session'] = {"$regex": session_contains, "$options": "i"}
+    if session_id:
+        query['session_info.session_id'] = session_id
     if has_author:
         query["authorships.author_name"] = {"$regex": has_author, "$options": "i"}
     if first_author:
         query["authorships.0.author_name"] = {"$regex": first_author, "$options": "i"}  # First author
     elif last_author:
         query["authorships.-1.author_name"] = {"$regex": last_author, "$options": "i"}  # Last author
-
     # Pagination
     skip = (page - 1) * limit
     papers = list(
@@ -119,8 +133,6 @@ async def get_papers(
         .skip(skip)
         .limit(limit)
     )
-    if not papers:
-        return []
     return papers
 
 @app.get("/papers/{paper_id}")
