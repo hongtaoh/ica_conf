@@ -1,0 +1,37 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                                 count
+--------------------------------  -------
+all                                     1
+generate_json_and_aggreated_data        1
+total                                   2
+
+Select jobs to execute...
+
+[Fri Nov  1 04:10:36 2024]
+rule generate_json_and_aggreated_data:
+    input: ../data/processed/papers.csv, ../data/processed/authors.csv, ../data/processed/sessions.csv
+    output: ../data/api/papers.json, ../data/api/authors.json, ../data/api/sessions.json
+    jobid: 1
+    reason: Missing output files: ../data/api/papers.json, ../data/api/authors.json, ../data/api/sessions.json
+    resources: tmpdir=/var/folders/wx/xz5y_06d15q5pgl_mhv76c8r0000gn/T
+
+[Fri Nov  1 04:10:41 2024]
+Finished job 1.
+1 of 2 steps (50%) done
+Select jobs to execute...
+
+[Fri Nov  1 04:10:41 2024]
+localrule all:
+    input: ../data/api/papers.json, ../data/api/authors.json, ../data/api/sessions.json
+    jobid: 0
+    reason: Input files updated by another job: ../data/api/sessions.json, ../data/api/papers.json, ../data/api/authors.json
+    resources: tmpdir=/var/folders/wx/xz5y_06d15q5pgl_mhv76c8r0000gn/T
+
+[Fri Nov  1 04:10:41 2024]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: .snakemake/log/2024-11-01T041035.944587.snakemake.log

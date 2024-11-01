@@ -1,6 +1,6 @@
 # generate paeprs.json and aggreated author and session data
 import pandas as pd
-import numpy as np
+import hashlib
 import sys
 import json 
 
@@ -18,6 +18,13 @@ def process_papers_df(PAPERS_DF):
     papers.number_of_authors = papers.number_of_authors.fillna(0).astype(int)
     papers.drop(['authors'], inplace=True, axis = 1)
     return papers 
+
+def get_session_id_dic(papers, SESSIONS_DF):
+    sessions = pd.read_csv(SESSIONS_DF)
+    session_names = pd.Series(list(sessions['Session Title'].dropna()) + list(papers.session.dropna())).unique()
+    session_ids = [hashlib.md5(name.encode()).hexdigest()[:12] for name in session_names]
+    session_id_dic = dict(zip(session_names, session_ids))
+    return session_id_dic
 
 def get_authorships_dic_and_paperid_authors_dic(AUTHORS_DF):
     authors = pd.read_csv(AUTHORS_DF)
@@ -73,7 +80,12 @@ def get_session_dic(SESSIONS_DF):
     return session_dic
 
 def update_papers_json(
-        papers_json_raw, authorships_dic, paperid_authors_dic, session_dic):
+        papers_json_raw, 
+        authorships_dic, 
+        paperid_authors_dic, 
+        session_dic,
+        session_id_dic
+    ):
     for paper_dic in papers_json_raw:
         try:
             paper_dic['authorships'] = authorships_dic[paper_dic['paper_id']]
@@ -87,15 +99,24 @@ def update_papers_json(
             paper_dic['session_info'] = session_dic[paper_dic['session']]
         except:
             paper_dic['session_info'] = None
+        if paper_dic['session']:
+            if paper_dic['session_info']:
+                paper_dic['session_info']['session_id'] = session_id_dic.get(paper_dic['session'], None)
 
-def get_sessions_json(papers, session_dic):
+def get_sessions_json(papers, session_dic, session_id_dic):
+    """Note that sessions_json now contains all sessions, both in papers and also sessions
+    """
+    # groupby excludes rows with nan values
     for session, group in papers.groupby('session'):
         has_valid_years = not group['year'].isnull().all()
-    # groupby excludes rows with nan values
         if session in session_dic:
+            # if session is already in session_dic
+            # update data
             session_dic[session]['years'] = [int(year) for year in group['year'].dropna().unique()] if has_valid_years else []
             session_dic[session]['paper_count'] = int(len(group))
         else:
+            # if session is not in session_dic
+            # add it to session_dic
             dic = {}
             dic['session'] = session
             dic['years'] = [int(year) for year in group['year'].dropna().unique()] if has_valid_years else []
@@ -109,8 +130,8 @@ def get_sessions_json(papers, session_dic):
                 dic['division'] = None
             session_dic[session] = dic
     sessions_json = list(session_dic.values())
-    for index, session in enumerate(sessions_json):
-        session['session_id'] = index  # Assign session_id based on index
+    for session in sessions_json:
+        session['session_id'] = session_id_dic.get(session['session'], None)
         session['paper_count'] = session.get('paper_count', 0)
         session['years'] = session.get('years', [])  # Ensure 'years' is present
         # this function is for all sessions present in the papers_df
@@ -143,6 +164,7 @@ def get_authors_json(AUTHORS_DF):
 if __name__ == '__main__':
     papers = process_papers_df(PAPERS_DF)
     paper_ids = papers.paper_id.unique()
+    session_id_dic = get_session_id_dic(papers, SESSIONS_DF)
     papers_json_raw = json.loads(papers.to_json(orient='records'))
     authorships_dic, paperid_authors_dic = get_authorships_dic_and_paperid_authors_dic(
         AUTHORS_DF
@@ -152,9 +174,14 @@ if __name__ == '__main__':
         papers_json_raw, 
         authorships_dic, 
         paperid_authors_dic, 
-        session_dic
+        session_dic,
+        session_id_dic
     )
-    sessions_json_raw = get_sessions_json(papers, session_dic)
+    sessions_json_raw = get_sessions_json(
+        papers, 
+        session_dic, 
+        session_id_dic
+    )
     authors_json_raw = get_authors_json(AUTHORS_DF)
 
     with open(PAPERS_JSON, 'w') as f:
@@ -165,7 +192,3 @@ if __name__ == '__main__':
         json.dump(sessions_json_raw, f, indent=2)
     
     print('Files written. All should be in place now.')
-
-
-
-
