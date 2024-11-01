@@ -28,7 +28,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",          
         "https://ica-conf.onrender.com",  
-        "https://icaconf.vercel.app/"  
+        "https://icaconf.vercel.app",
+        "https://ica-conference-app-hongtaohs-projects.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
