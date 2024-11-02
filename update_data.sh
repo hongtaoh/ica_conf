@@ -14,6 +14,6 @@ cd mongodb
 conda deactivate
 conda activate farm
 python3 upload_data.py
-cd ..
-cd fastapi
-fastapi dev main.py
+# cd ..
+# cd fastapi
+# fastapi dev main.py

@@ -3,6 +3,8 @@ import pandas as pd
 import hashlib
 import sys
 import json 
+from collections import defaultdict
+from fuzzywuzzy import fuzz
 
 PAPERS_DF = sys.argv[1]
 AUTHORS_DF = sys.argv[2]
@@ -10,9 +12,13 @@ SESSIONS_DF = sys.argv[3]
 PAPERS_JSON = sys.argv[4]
 AUTHORS_JSON = sys.argv[5]
 SESSIONS_JSON = sys.argv[6]
+INDEXED_PAPERS_JSON = sys.argv[7]
+SESSIONID_PAPERS_JSON = sys.argv[8]
+AUTHOR_PAPERS_JSON = sys.argv[9]
 
 def process_papers_df(PAPERS_DF):
     papers = pd.read_csv(PAPERS_DF)
+    papers = papers.where(pd.notnull(papers), None)
     papers.columns = ['paper_id', 'title', 'paper_type', 'abstract', 
                     'number_of_authors', 'year', 'session', 'division', 'authors']
     papers.number_of_authors = papers.number_of_authors.fillna(0).astype(int)
@@ -28,6 +34,7 @@ def get_session_id_dic(papers, SESSIONS_DF):
 
 def get_authorships_dic_and_paperid_authors_dic(AUTHORS_DF):
     authors = pd.read_csv(AUTHORS_DF)
+    authors = authors.where(pd.notnull(authors), None)
     # look like this:
     """
     [{'position': 0, 'author_name': 'Åsa Kroon', 'author_affiliation': 'Örebro U'},
@@ -64,6 +71,7 @@ def get_session_dic(SESSIONS_DF):
     'division': 'In Event: ICA Plenary Interactive Paper/Poster Session II'}
     """
     sessions = pd.read_csv(SESSIONS_DF)
+    sessions = sessions.where(pd.notnull(sessions), None)
     session_dic = {}
     for session, group in sessions.groupby('Session Title'):
         dic = {}
@@ -86,22 +94,13 @@ def update_papers_json(
         session_dic,
         session_id_dic
     ):
-    for paper_dic in papers_json_raw:
-        try:
-            paper_dic['authorships'] = authorships_dic[paper_dic['paper_id']]
-        except:
-            paper_dic['authorships'] = None
-        try:
-            paper_dic['author_names'] = paperid_authors_dic[paper_dic['paper_id']]
-        except:
-            paper_dic['author_names'] = None 
-        try:
-            paper_dic['session_info'] = session_dic[paper_dic['session']]
-        except:
-            paper_dic['session_info'] = None
-        if paper_dic['session']:
-            if paper_dic['session_info']:
-                paper_dic['session_info']['session_id'] = session_id_dic.get(paper_dic['session'], None)
+    for paper in papers_json_raw:
+        paper['authorships'] = authorships_dic.get(paper['paper_id'], None)
+        paper['author_names'] = paperid_authors_dic.get(paper['paper_id'], None)
+        paper['session_info'] = session_dic.get(paper['session'], None)
+        
+        if paper.get('session') and paper['session_info']:
+            paper['session_info']['session_id'] = session_id_dic.get(paper['session'], None)
 
 def get_sessions_json(papers, session_dic, session_id_dic):
     """Note that sessions_json now contains all sessions, both in papers and also sessions
@@ -139,6 +138,23 @@ def get_sessions_json(papers, session_dic, session_id_dic):
         # so some sessions in session_dic but not in papers_df won't have 'year'
     return sessions_json
 
+def deduplicate_affiliations(affs, threshold=50):
+    if len(affs) == 1:
+        return affs
+    res = []
+    seen = set()
+    for aff in affs:
+        if aff in seen:
+            continue 
+        similar_affs = [other_aff for other_aff in affs 
+                        if other_aff not in seen and 
+                        fuzz.ratio(aff, other_aff) > threshold
+                        ]
+        longest_aff = max(similar_affs, key=len)
+        res.append(longest_aff)
+        seen.update(similar_affs)
+    return res
+
 def get_authors_json(AUTHORS_DF):
     authors = pd.read_csv(AUTHORS_DF)
     authors_json = []
@@ -147,19 +163,42 @@ def get_authors_json(AUTHORS_DF):
         group = group.sort_values('Year', ascending=True)
         paper_ids = list(group['Paper ID'].unique())
         affs = list(group['Author Affiliation'].dropna().unique())
+        deduped_affs = deduplicate_affiliations(affs) or []
+        clean_deduped_affs = [aff for aff in deduped_affs if aff is not None]
         years = [int(year) for year in group['Year'].unique()]
         dic = {
             'author_name': author_name,
             'attend_count': int(len(years)),
             'paper_count': int(len(paper_ids)),
             'paper_ids': paper_ids,
-            'affiliations': affs,
-            'affiliation_history': " -> ".join(map(str, affs)),
+            'affiliations': deduped_affs,
+            'affiliation_history': " → ".join(clean_deduped_affs),
             'years_attended': years,
         }
         authors_json.append(dic)
     # sort by attend_count, descending
     return sorted(authors_json, key=lambda x: x['attend_count'], reverse=True)
+
+def get_indexed_papers_json(papers_json_raw):
+     return {
+        paper['paper_id']: paper for paper in papers_json_raw
+    }
+
+def get_sessionId_papers_json(papers_json_raw):
+    sessionId_papers_json = defaultdict(list)
+    for paper in papers_json_raw:
+        if paper.get('session_info') and paper['session_info'].get('session_id'):
+            session_id = paper['session_info']['session_id']
+            sessionId_papers_json[session_id].append(paper)
+    return dict(sessionId_papers_json)
+
+def get_author_papers_json(papers_json_raw):
+    author_papers_dict = defaultdict(list)
+    for paper in papers_json_raw:
+        if paper.get('author_names'):
+            for author_name in paper.get('author_names', []):
+                author_papers_dict[author_name].append(paper)
+    return dict(author_papers_dict)
 
 if __name__ == '__main__':
     papers = process_papers_df(PAPERS_DF)
@@ -184,11 +223,29 @@ if __name__ == '__main__':
     )
     authors_json_raw = get_authors_json(AUTHORS_DF)
 
+    # paper_id (str): paper (Dict)
+    indexed_papers_json = get_indexed_papers_json(papers_json_raw)
+
+    # session_id (str): papers (List of Dict)
+    sessionId_papers_json = get_sessionId_papers_json(papers_json_raw)
+
+    # author name (str): papers (List of Dict) 
+    author_papers_json = get_author_papers_json(papers_json_raw)
+
     with open(PAPERS_JSON, 'w') as f:
         json.dump(papers_json_raw, f, indent=2)
     with open(AUTHORS_JSON, 'w') as f:
         json.dump(authors_json_raw, f, indent=2)
     with open(SESSIONS_JSON, 'w') as f:
         json.dump(sessions_json_raw, f, indent=2)
-    
+
+    with open(INDEXED_PAPERS_JSON, 'w') as f:
+        json.dump(indexed_papers_json, f, indent=2)
+
+    with open(SESSIONID_PAPERS_JSON, 'w') as f:
+        json.dump(sessionId_papers_json, f, indent=2)
+
+    with open(AUTHOR_PAPERS_JSON, 'w') as f:
+        json.dump(author_papers_json, f, indent=2)
+
     print('Files written. All should be in place now.')

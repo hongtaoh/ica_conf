@@ -1,0 +1,33 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                                 count
+--------------------------------  -------
+all                                     1
+generate_json_and_aggreated_data        1
+total                                   2
+
+Select jobs to execute...
+
+[Sat Nov  2 11:33:32 2024]
+rule generate_json_and_aggreated_data:
+    input: ../data/processed/papers.csv, ../data/processed/authors.csv, ../data/processed/sessions.csv
+    output: ../data/api/papers.json, ../data/api/authors.json, ../data/api/sessions.json, ../data/api/indexed_papers.json, ../data/api/sessionid_papers.json
+    jobid: 1
+    reason: Missing output files: ../data/api/sessionid_papers.json, ../data/api/papers.json, ../data/api/indexed_papers.json, ../data/api/authors.json, ../data/api/sessions.json
+    resources: tmpdir=/var/folders/wx/xz5y_06d15q5pgl_mhv76c8r0000gn/T
+
+[Sat Nov  2 11:33:34 2024]
+Error in rule generate_json_and_aggreated_data:
+    jobid: 1
+    input: ../data/processed/papers.csv, ../data/processed/authors.csv, ../data/processed/sessions.csv
+    output: ../data/api/papers.json, ../data/api/authors.json, ../data/api/sessions.json, ../data/api/indexed_papers.json, ../data/api/sessionid_papers.json
+    shell:
+        python scripts/generate_json_and_aggreated_data.py ../data/processed/papers.csv ../data/processed/authors.csv ../data/processed/sessions.csv ../data/api/papers.json ../data/api/authors.json ../data/api/sessions.json ../data/api/indexed_papers.json ../data/api/sessionid_papers.json
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2024-11-02T113332.335544.snakemake.log

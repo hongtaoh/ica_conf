@@ -43,6 +43,9 @@ SESSIONS_DF = pjoin(PROCESSED_DATA_DIR, 'sessions.csv')
 PAPERS_JSON = pjoin(API_DATA_DIR, 'papers.json')
 AUTHORS_JSON = pjoin(API_DATA_DIR, 'authors.json')
 SESSIONS_JSON = pjoin(API_DATA_DIR, 'sessions.json')
+INDEXED_PAPERS_JSON = pjoin(API_DATA_DIR, 'indexed_papers.json')
+SESSIONID_PAPERS_JSON = pjoin(API_DATA_DIR, 'sessionid_papers.json')
+AUTHOR_PAPERS_JSON = pjoin(API_DATA_DIR, 'author_papers.json')
 
 ###############################################################################
 # Workflows
@@ -65,7 +68,10 @@ rule all:
         # SESSIONS_DF,
         PAPERS_JSON,
         AUTHORS_JSON,
-        SESSIONS_JSON,          
+        SESSIONS_JSON,
+        INDEXED_PAPERS_JSON,
+        SESSIONID_PAPERS_JSON,  
+        AUTHOR_PAPERS_JSON,     
 
 # rule scrape_03_04:
 #     output: 
@@ -120,4 +126,7 @@ rule generate_json_and_aggreated_data:
         PAPERS_JSON,
         AUTHORS_JSON,
         SESSIONS_JSON,
+        INDEXED_PAPERS_JSON,
+        SESSIONID_PAPERS_JSON,
+        AUTHOR_PAPERS_JSON,
     shell: "python scripts/generate_json_and_aggreated_data.py {input} {output}"

@@ -1,0 +1,37 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                                 count
+--------------------------------  -------
+all                                     1
+generate_json_and_aggreated_data        1
+total                                   2
+
+Select jobs to execute...
+
+[Sat Nov  2 13:51:26 2024]
+rule generate_json_and_aggreated_data:
+    input: ../data/processed/papers.csv, ../data/processed/authors.csv, ../data/processed/sessions.csv
+    output: ../data/api/papers.json, ../data/api/authors.json, ../data/api/sessions.json, ../data/api/indexed_papers.json, ../data/api/sessionid_papers.json, ../data/api/author_papers.json
+    jobid: 1
+    reason: Missing output files: ../data/api/indexed_papers.json, ../data/api/sessions.json, ../data/api/authors.json, ../data/api/papers.json, ../data/api/sessionid_papers.json, ../data/api/author_papers.json
+    resources: tmpdir=/var/folders/wx/xz5y_06d15q5pgl_mhv76c8r0000gn/T
+
+[Sat Nov  2 13:51:33 2024]
+Finished job 1.
+1 of 2 steps (50%) done
+Select jobs to execute...
+
+[Sat Nov  2 13:51:33 2024]
+localrule all:
+    input: ../data/api/papers.json, ../data/api/authors.json, ../data/api/sessions.json, ../data/api/indexed_papers.json, ../data/api/sessionid_papers.json, ../data/api/author_papers.json
+    jobid: 0
+    reason: Input files updated by another job: ../data/api/indexed_papers.json, ../data/api/sessions.json, ../data/api/authors.json, ../data/api/papers.json, ../data/api/sessionid_papers.json, ../data/api/author_papers.json
+    resources: tmpdir=/var/folders/wx/xz5y_06d15q5pgl_mhv76c8r0000gn/T
+
+[Sat Nov  2 13:51:33 2024]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: .snakemake/log/2024-11-02T135125.854880.snakemake.log
