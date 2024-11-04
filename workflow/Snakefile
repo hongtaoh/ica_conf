@@ -45,7 +45,8 @@ AUTHORS_JSON = pjoin(API_DATA_DIR, 'authors.json')
 SESSIONS_JSON = pjoin(API_DATA_DIR, 'sessions.json')
 INDEXED_PAPERS_JSON = pjoin(API_DATA_DIR, 'indexed_papers.json')
 SESSIONID_PAPERS_JSON = pjoin(API_DATA_DIR, 'sessionid_papers.json')
-AUTHOR_PAPERS_JSON = pjoin(API_DATA_DIR, 'author_papers.json')
+AUTHOR_PAPER_IDS_JSON = pjoin(API_DATA_DIR, 'author_paper_ids.json')
+PAPER_EMBEDDINGS_JSON = pjoin(API_DATA_DIR, 'paper_embeddings.json')
 
 ###############################################################################
 # Workflows
@@ -63,15 +64,16 @@ rule all:
         # INTERACTIVE_SESSION_2014_2018,
         # INTERACTIVE_AUTHOR_2014_2018,
         # INTERACTIVE_PAPER_2014_2018,
-        # PAPERS_DF,
-        # AUTHORS_DF,
-        # SESSIONS_DF,
+        PAPERS_DF,
+        AUTHORS_DF,
+        SESSIONS_DF,
         PAPERS_JSON,
         AUTHORS_JSON,
         SESSIONS_JSON,
         INDEXED_PAPERS_JSON,
         SESSIONID_PAPERS_JSON,  
-        AUTHOR_PAPERS_JSON,     
+        AUTHOR_PAPER_IDS_JSON,   
+        PAPER_EMBEDDINGS_JSON
 
 # rule scrape_03_04:
 #     output: 
@@ -99,23 +101,23 @@ rule all:
 #         INTERACTIVE_PAPER_2014_2018,
 #     shell: "python scripts/scrape_2014_onward_interactive_paper.py {output}"
 
-# rule combine_all_data:
-#     input:
-#         PAPER_2003_2004,
-#         PAPER_2005_2013,
-#         PAPER_2014_2018,
-#         INTERACTIVE_PAPER_2014_2018,
-#         AUTHOR_2003_2004,
-#         AUTHOR_2005_2013,
-#         AUTHOR_2014_2018,
-#         INTERACTIVE_AUTHOR_2014_2018,
-#         SESSION_2014_2018,
-#         INTERACTIVE_SESSION_2014_2018
-#     output: 
-#         PAPERS_DF,
-#         AUTHORS_DF,
-#         SESSIONS_DF,
-#     shell: "python scripts/combine_all_data.py {input} {output}"
+rule combine_all_data:
+    input:
+        PAPER_2003_2004,
+        PAPER_2005_2013,
+        PAPER_2014_2018,
+        INTERACTIVE_PAPER_2014_2018,
+        AUTHOR_2003_2004,
+        AUTHOR_2005_2013,
+        AUTHOR_2014_2018,
+        INTERACTIVE_AUTHOR_2014_2018,
+        SESSION_2014_2018,
+        INTERACTIVE_SESSION_2014_2018
+    output: 
+        PAPERS_DF,
+        AUTHORS_DF,
+        SESSIONS_DF,
+    shell: "python scripts/combine_all_data.py {input} {output}"
 
 rule generate_json_and_aggreated_data:
     input:
@@ -128,5 +130,10 @@ rule generate_json_and_aggreated_data:
         SESSIONS_JSON,
         INDEXED_PAPERS_JSON,
         SESSIONID_PAPERS_JSON,
-        AUTHOR_PAPERS_JSON,
+        AUTHOR_PAPER_IDS_JSON,
     shell: "python scripts/generate_json_and_aggreated_data.py {input} {output}"
+
+rule get_paper_embeddings:
+    input: PAPERS_JSON
+    output: PAPER_EMBEDDINGS_JSON
+    shell: "python scripts/get_paper_embeddings.py {input} {output}"

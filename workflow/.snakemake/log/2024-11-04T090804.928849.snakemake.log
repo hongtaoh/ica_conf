@@ -1,0 +1,6 @@
+Building DAG of jobs...
+MissingInputException in rule get_paper_embeddings in file /Users/hongtaoh/Desktop/github/ica_conf/workflow/Snakefile, line 136:
+Missing input files for rule get_paper_embeddings:
+    output: ../data/api/paper_embeddings.json
+    affected files:
+        ../data/api/papers.json

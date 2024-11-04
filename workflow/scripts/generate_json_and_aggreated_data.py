@@ -14,13 +14,24 @@ AUTHORS_JSON = sys.argv[5]
 SESSIONS_JSON = sys.argv[6]
 INDEXED_PAPERS_JSON = sys.argv[7]
 SESSIONID_PAPERS_JSON = sys.argv[8]
-AUTHOR_PAPERS_JSON = sys.argv[9]
+AUTHOR_PAPER_IDS_JSON = sys.argv[9]
 
 def process_papers_df(PAPERS_DF):
     papers = pd.read_csv(PAPERS_DF)
     papers = papers.where(pd.notnull(papers), None)
-    papers.columns = ['paper_id', 'title', 'paper_type', 'abstract', 
-                    'number_of_authors', 'year', 'session', 'division', 'authors']
+    column_mapping = {
+        'Paper ID': 'paper_id',
+        'Title': 'title',
+        'Paper Type': 'paper_type',
+        'Abstract': 'abstract',
+        'Number of Authors': 'number_of_authors',
+        'Year': 'year',
+        'Session': 'session',
+        'Division/Unit': 'division',
+        'Authors': 'authors'
+    }
+    # Rename columns in the DataFrame using the dictionary
+    papers.rename(columns=column_mapping, inplace=True)
     papers.number_of_authors = papers.number_of_authors.fillna(0).astype(int)
     papers.drop(['authors'], inplace=True, axis = 1)
     return papers 
@@ -192,13 +203,13 @@ def get_sessionId_papers_json(papers_json_raw):
             sessionId_papers_json[session_id].append(paper)
     return dict(sessionId_papers_json)
 
-def get_author_papers_json(papers_json_raw):
-    author_papers_dict = defaultdict(list)
-    for paper in papers_json_raw:
-        if paper.get('author_names'):
-            for author_name in paper.get('author_names', []):
-                author_papers_dict[author_name].append(paper)
-    return dict(author_papers_dict)
+def get_author_paper_ids_json(authors_json_raw):
+    author_paper_ids_dict = {}
+    for author in authors_json_raw:
+        if author.get('author_name'):
+            author_name = author.get('author_name')
+            author_paper_ids_dict[author_name] = author.get("paper_ids")
+    return dict(author_paper_ids_dict)
 
 if __name__ == '__main__':
     papers = process_papers_df(PAPERS_DF)
@@ -229,8 +240,8 @@ if __name__ == '__main__':
     # session_id (str): papers (List of Dict)
     sessionId_papers_json = get_sessionId_papers_json(papers_json_raw)
 
-    # author name (str): papers (List of Dict) 
-    author_papers_json = get_author_papers_json(papers_json_raw)
+    # author name (str): paper_ids (List of str)
+    author_paper_ids_json = get_author_paper_ids_json(authors_json_raw)
 
     with open(PAPERS_JSON, 'w') as f:
         json.dump(papers_json_raw, f, indent=2)
@@ -245,7 +256,7 @@ if __name__ == '__main__':
     with open(SESSIONID_PAPERS_JSON, 'w') as f:
         json.dump(sessionId_papers_json, f, indent=2)
 
-    with open(AUTHOR_PAPERS_JSON, 'w') as f:
-        json.dump(author_papers_json, f, indent=2)
+    with open(AUTHOR_PAPER_IDS_JSON, 'w') as f:
+        json.dump(author_paper_ids_json, f, indent=2)
 
     print('Files written. All should be in place now.')

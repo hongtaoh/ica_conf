@@ -1,0 +1,33 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                                 count
+--------------------------------  -------
+all                                     1
+generate_json_and_aggreated_data        1
+get_paper_embeddings                    1
+total                                   3
+
+Select jobs to execute...
+
+[Mon Nov  4 12:37:05 2024]
+rule generate_json_and_aggreated_data:
+    input: ../data/processed/papers.csv, ../data/processed/authors.csv, ../data/processed/sessions.csv
+    output: ../data/api/papers.json, ../data/api/authors.json, ../data/api/sessions.json, ../data/api/indexed_papers.json, ../data/api/sessionid_papers.json, ../data/api/author_paper_ids.json
+    jobid: 1
+    reason: Missing output files: ../data/api/sessions.json, ../data/api/indexed_papers.json, ../data/api/authors.json, ../data/api/sessionid_papers.json, ../data/api/author_paper_ids.json, ../data/api/papers.json
+    resources: tmpdir=/var/folders/wx/xz5y_06d15q5pgl_mhv76c8r0000gn/T
+
+Terminating processes on user request, this might take some time.
+[Mon Nov  4 12:37:08 2024]
+Error in rule generate_json_and_aggreated_data:
+    jobid: 1
+    input: ../data/processed/papers.csv, ../data/processed/authors.csv, ../data/processed/sessions.csv
+    output: ../data/api/papers.json, ../data/api/authors.json, ../data/api/sessions.json, ../data/api/indexed_papers.json, ../data/api/sessionid_papers.json, ../data/api/author_paper_ids.json
+    shell:
+        python scripts/generate_json_and_aggreated_data.py ../data/processed/papers.csv ../data/processed/authors.csv ../data/processed/sessions.csv ../data/api/papers.json ../data/api/authors.json ../data/api/sessions.json ../data/api/indexed_papers.json ../data/api/sessionid_papers.json ../data/api/author_paper_ids.json
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Complete log: .snakemake/log/2024-11-04T123705.395403.snakemake.log

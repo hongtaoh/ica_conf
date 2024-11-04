@@ -1,0 +1,51 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                                 count
+--------------------------------  -------
+all                                     1
+combine_all_data                        1
+generate_json_and_aggreated_data        1
+get_paper_embeddings                    1
+total                                   4
+
+Select jobs to execute...
+
+[Mon Nov  4 12:38:01 2024]
+rule combine_all_data:
+    input: ../data/interim/paper_df_2003_2004.csv, ../data/interim/paper_df_2005_2013.csv, ../data/interim/paper_df_2014_2018.csv, ../data/interim/interactive_paper_df_2014_2018.csv, ../data/interim/author_df_2003_2004.csv, ../data/interim/author_df_2005_2013.csv, ../data/interim/author_df_2014_2018.csv, ../data/interim/interactive_author_df_2014_2018.csv, ../data/interim/session_df_2014_2018.csv, ../data/interim/interactive_session_df_2014_2018.csv
+    output: ../data/processed/papers.csv, ../data/processed/authors.csv, ../data/processed/sessions.csv
+    jobid: 1
+    reason: Missing output files: ../data/processed/papers.csv, ../data/processed/sessions.csv, ../data/processed/authors.csv
+    resources: tmpdir=/var/folders/wx/xz5y_06d15q5pgl_mhv76c8r0000gn/T
+
+[Mon Nov  4 12:38:05 2024]
+Finished job 1.
+1 of 4 steps (25%) done
+Select jobs to execute...
+
+[Mon Nov  4 12:38:05 2024]
+rule generate_json_and_aggreated_data:
+    input: ../data/processed/papers.csv, ../data/processed/authors.csv, ../data/processed/sessions.csv
+    output: ../data/api/papers.json, ../data/api/authors.json, ../data/api/sessions.json, ../data/api/indexed_papers.json, ../data/api/sessionid_papers.json, ../data/api/author_paper_ids.json
+    jobid: 2
+    reason: Missing output files: ../data/api/indexed_papers.json, ../data/api/authors.json, ../data/api/sessions.json, ../data/api/papers.json, ../data/api/sessionid_papers.json, ../data/api/author_paper_ids.json; Input files updated by another job: ../data/processed/papers.csv, ../data/processed/sessions.csv, ../data/processed/authors.csv
+    resources: tmpdir=/var/folders/wx/xz5y_06d15q5pgl_mhv76c8r0000gn/T
+
+[Mon Nov  4 12:38:11 2024]
+Finished job 2.
+2 of 4 steps (50%) done
+Select jobs to execute...
+
+[Mon Nov  4 12:38:11 2024]
+rule get_paper_embeddings:
+    input: ../data/api/papers.json
+    output: ../data/api/paper_embeddings.json
+    jobid: 3
+    reason: Missing output files: ../data/api/paper_embeddings.json; Input files updated by another job: ../data/api/papers.json
+    resources: tmpdir=/var/folders/wx/xz5y_06d15q5pgl_mhv76c8r0000gn/T
+
+Terminating processes on user request, this might take some time.
+Cancelling snakemake on user request.

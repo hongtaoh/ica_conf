@@ -1,0 +1,51 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                                 count
+--------------------------------  -------
+all                                     1
+generate_json_and_aggreated_data        1
+get_paper_embeddings                    1
+total                                   3
+
+Select jobs to execute...
+
+[Mon Nov  4 09:11:17 2024]
+rule generate_json_and_aggreated_data:
+    input: ../data/processed/papers.csv, ../data/processed/authors.csv, ../data/processed/sessions.csv
+    output: ../data/api/papers.json, ../data/api/authors.json, ../data/api/sessions.json, ../data/api/indexed_papers.json, ../data/api/sessionid_papers.json, ../data/api/author_paper_ids.json
+    jobid: 1
+    reason: Missing output files: ../data/api/sessions.json, ../data/api/indexed_papers.json, ../data/api/sessionid_papers.json, ../data/api/authors.json, ../data/api/papers.json, ../data/api/author_paper_ids.json
+    resources: tmpdir=/var/folders/wx/xz5y_06d15q5pgl_mhv76c8r0000gn/T
+
+[Mon Nov  4 09:11:22 2024]
+Finished job 1.
+1 of 3 steps (33%) done
+Select jobs to execute...
+
+[Mon Nov  4 09:11:22 2024]
+rule get_paper_embeddings:
+    input: ../data/api/papers.json
+    output: ../data/api/paper_embeddings.json
+    jobid: 2
+    reason: Missing output files: ../data/api/paper_embeddings.json; Input files updated by another job: ../data/api/papers.json
+    resources: tmpdir=/var/folders/wx/xz5y_06d15q5pgl_mhv76c8r0000gn/T
+
+[Mon Nov  4 09:13:31 2024]
+Finished job 2.
+2 of 3 steps (67%) done
+Select jobs to execute...
+
+[Mon Nov  4 09:13:31 2024]
+localrule all:
+    input: ../data/api/papers.json, ../data/api/authors.json, ../data/api/sessions.json, ../data/api/indexed_papers.json, ../data/api/sessionid_papers.json, ../data/api/author_paper_ids.json, ../data/api/paper_embeddings.json
+    jobid: 0
+    reason: Input files updated by another job: ../data/api/sessions.json, ../data/api/sessionid_papers.json, ../data/api/indexed_papers.json, ../data/api/author_paper_ids.json, ../data/api/papers.json, ../data/api/paper_embeddings.json, ../data/api/authors.json
+    resources: tmpdir=/var/folders/wx/xz5y_06d15q5pgl_mhv76c8r0000gn/T
+
+[Mon Nov  4 09:13:31 2024]
+Finished job 0.
+3 of 3 steps (100%) done
+Complete log: .snakemake/log/2024-11-04T091116.817677.snakemake.log

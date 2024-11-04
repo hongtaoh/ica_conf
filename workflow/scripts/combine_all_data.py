@@ -5,6 +5,8 @@ Combine all data together
 import pandas as pd
 import numpy as np
 import sys
+import hashlib
+import uuid 
 
 PAPER_2003_2004 = sys.argv[1]
 PAPER_2005_2013 = sys.argv[2]
@@ -19,6 +21,74 @@ INTERACTIVE_SESSION_2014_2018 = sys.argv[10]
 PAPERS_DF = sys.argv[11]
 AUTHORS_DF = sys.argv[12]
 SESSIONS_DF = sys.argv[13]
+
+# generate new paper id based on title_paper_id
+def generate_unique_id(title_paper_id):
+	return hashlib.md5(str(title_paper_id).encode()).hexdigest()[:16]
+
+def update_paper_df_and_get_id_dic(paper_df):
+	"""
+	The purpose of this function is to update Paper ID because
+	The old paper_ids are not unique.
+
+	We update the id and get a dict where key is old_paper_id-title and value is the
+	new paper_id (str)
+	"""
+	# change col name
+	paper_df.rename(columns={'Paper ID': 'Old Paper ID'}, inplace=True)
+
+	# check whether title_paper_ids are truly unique
+	paper_df['Title_Old_Paper_ID'] = paper_df.apply(
+		lambda row: row['Title'] + "_" + str(row['Old Paper ID']), axis = 1)
+	if len(paper_df['Title_Old_Paper_ID'].unique()) == paper_df.shape[0]:
+		print("Title_Old_Paper_ID is truly unique")
+	else:
+		print("Even Title_Old_Paper_ID is not truly unique")
+
+	paper_df['Paper ID'] = ''
+
+	for year, group in paper_df.groupby('Year'):
+		for idx, row in group.iterrows():
+			title_paper_id = row['Title'] + "_" + str(row['Old Paper ID'])
+			paper_df.at[idx, 'Paper ID'] = f"{year}-{generate_unique_id(title_paper_id)}"
+
+	# check whether the new paper ids are unique or not
+	if len(paper_df['Paper ID'].unique()) == paper_df.shape[0]:
+		print("The new Paper IDs are truly unique")
+	else:
+		print("The new Paper IDs are not truly unique")
+		print(len(paper_df['Paper ID'].unique()))
+		print(paper_df.shape[0])
+
+	# generate the dic 
+	id_dic = dict(zip(paper_df['Title_Old_Paper_ID'], paper_df['Paper ID']))
+
+	paper_df.drop(columns=['Title_Old_Paper_ID', 'Old Paper ID'], inplace=True)
+
+	paper_df = paper_df[['Paper ID'] + [
+		col for col in paper_df.columns if col != 'Paper ID']]
+	
+	return paper_df, id_dic
+
+def update_author_df(author_df, id_dic):
+	"""Update paper_id in author_df
+	"""
+	author_df.rename(columns={'Paper ID': 'Old Paper ID'}, inplace=True)
+
+	# Create 'Title_Old_Paper_ID' only if both columns exist
+	author_df['Title_Old_Paper_ID'] = author_df.apply(
+		lambda row: row['Title'] + "_" + str(row['Old Paper ID']), axis=1
+	)
+
+	# use map instead of apply to avoid keyerror
+	author_df['Paper ID'] = author_df['Title_Old_Paper_ID'].map(id_dic)
+
+	author_df.drop(columns=['Title_Old_Paper_ID', 'Old Paper ID'], inplace=True)
+
+	author_df = author_df[['Paper ID'] + [
+		col for col in author_df.columns if col != 'Paper ID']]
+	
+	return author_df
 
 if __name__ == '__main__':
 	# import all data 
@@ -95,13 +165,15 @@ if __name__ == '__main__':
 
 	# concatenate paper df
 	paper_df = pd.concat([paper1, paper2, paper3, paper4], axis = 0)
-
+	print("Before concatenation, unique rows in paper_df:", paper_df.shape[0])
+	paper_df.drop_duplicates(
+		subset=['Title', 'Paper ID', 'Year'], inplace=True)
+	print("After concatenation, unique rows in paper_df:", paper_df.shape[0])
+	
 	# get id: authors dic
 	paperid_authors_dic = {}
 	for paper_id, group in author_df.groupby('Paper ID'):
 		paperid_authors_dic[paper_id] = np.array(group['Author Name'])
-
-	# paper_df['Authors'] = paper_df['Paper ID'].apply(lambda x: paperid_authors_dic.get(x, np.array([])))
 
 	paper_df['Authors'] = paper_df['Paper ID'].apply(
 		lambda x: ", ".join(paperid_authors_dic[x]) if x in paperid_authors_dic else np.nan)
@@ -112,10 +184,27 @@ if __name__ == '__main__':
 		'Year', 'Session Type', 'Session Title', 
 		'Division/Unit', 'Chair Name', 'Chair Affiliation'
 	]
-
+	
 	# write to file
 	paper_df.to_csv(PAPERS_DF, index=False)
 	author_df.to_csv(AUTHORS_DF, index=False)
 	session_df.to_csv(SESSIONS_DF, index=False)
 
 	print('Files written. All should be in place now.')
+	print("Starting with recreading paper ids")
+
+	paper_df = pd.read_csv(PAPERS_DF)
+	author_df = pd.read_csv(AUTHORS_DF)
+
+	# I need to reassign paper_ids because {2014, 2015, 2016, 2017, 2018}
+	# contains duplicated paper ids
+	paper_df, id_dic = update_paper_df_and_get_id_dic(paper_df)
+	author_df = update_author_df(author_df, id_dic)
+
+	print('Re-writing to files now.')
+	paper_df.to_csv(PAPERS_DF, index=False)
+	author_df.to_csv(AUTHORS_DF, index=False)
+	print('Files written. All should be in place now.')
+
+
+	
