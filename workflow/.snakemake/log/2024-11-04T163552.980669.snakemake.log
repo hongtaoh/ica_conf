@@ -1,0 +1,37 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                     count
+--------------------  -------
+all                         1
+get_paper_embeddings        1
+total                       2
+
+Select jobs to execute...
+
+[Mon Nov  4 16:35:53 2024]
+rule get_paper_embeddings:
+    input: ../data/api/papers.json
+    output: ../data/api/paper_embeddings.json, ../fastapi/pca_model.pkl
+    jobid: 1
+    reason: Missing output files: ../data/api/paper_embeddings.json
+    resources: tmpdir=/var/folders/wx/xz5y_06d15q5pgl_mhv76c8r0000gn/T
+
+[Mon Nov  4 16:37:55 2024]
+Finished job 1.
+1 of 2 steps (50%) done
+Select jobs to execute...
+
+[Mon Nov  4 16:37:55 2024]
+localrule all:
+    input: ../data/api/paper_embeddings.json, ../fastapi/pca_model.pkl
+    jobid: 0
+    reason: Input files updated by another job: ../fastapi/pca_model.pkl, ../data/api/paper_embeddings.json
+    resources: tmpdir=/var/folders/wx/xz5y_06d15q5pgl_mhv76c8r0000gn/T
+
+[Mon Nov  4 16:37:55 2024]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: .snakemake/log/2024-11-04T163552.980669.snakemake.log
