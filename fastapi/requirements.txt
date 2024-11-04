@@ -1,2 +1,5 @@
 fastapi[all]
 pymongo
+numpy
+faiss-cpu
+sentence_transformers
